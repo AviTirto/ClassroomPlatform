@@ -42,6 +42,7 @@ export function NBChunksProvider({ children }) {
         if (chunk.type === CHUNK_TYPES.TEXT) {
             return (
                 <TextChunk
+                    key={chunk.order}
                     order={chunk.order}
                     content={chunk.content}
                     defaultEditMode={chunk.content.length === 0 ? true : false}
@@ -50,6 +51,7 @@ export function NBChunksProvider({ children }) {
         } else if (chunk.type === CHUNK_TYPES.VIDEO) {
             return (
                 <VideoChunk
+                    key={chunk.order}
                     order={chunk.order}
                     url={chunk.url}
                     defaultEditMode={chunk.url.length === 0 ? true : false}

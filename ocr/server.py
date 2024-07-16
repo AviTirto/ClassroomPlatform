@@ -10,6 +10,11 @@ from pytube import YouTube
 from moviepy.editor import *
 import srt
 from srt import Subtitle
+from pytube.innertube import _default_clients
+import time
+import asyncio
+
+# youtube api key: ***REMOVED***
 
 
 api_key = "***REMOVED***"
@@ -174,68 +179,143 @@ async def getQuestions(query):
             response = model.generate_content(prompt + content)
             # print(type(response.text))
             return convertJSONList(response.text)
-        
-@app.post('/upload_lecture')
-async def parseTimestamps(link: str):
-    # Create a YouTube object
-    yt = YouTube(link)
-    yt.bypass_age_gate()
-    caption = yt.captions['a.en']
-    parsed_subtitles = srt.parse(caption.generate_srt_captions())
-    parsed_subtitles = [sub for sub in parsed_subtitles if sub.content != ' ' and sub.content != '']
-    chunked_subtitles = []
 
+
+class Subtitle:
+    def __init__(self, index, start, end, content):
+        self.index = index
+        self.start = start
+        self.end = end
+        self.content = content
+
+@app.post('/upload_lecture')
+async def parse_timestamps(link: str):
+    retries = 0
+    while retries < 3:
+        try:
+            yt = YouTube(link)
+            yt.bypass_age_gate()
+            break
+        except Exception as e:
+            retries += 1
+            print(f"Attempt {retries} failed: {e}")
+            time.sleep(1)
+
+        if retries == 3:
+            print("Failed to process YouTube link after several attempts.")
+            return None
+    
+    if 'a.en' in yt.captions:
+        caption = yt.captions['a.en']
+    elif 'en' in yt.captions:
+        caption = yt.captions['en']
+    else:
+        raise HTTPException(status_code=404, detail="No English captions found")
+
+    try:
+        parsed_subtitles = list(srt.parse(caption.generate_srt_captions()))
+        parsed_subtitles = [sub for sub in parsed_subtitles if sub.content.strip()]
+    except Exception as e:
+        return "Error"
+        # raise HTTPException(status_code=500, detail=f"Failed to parse subtitles: {str(e)}")
+
+    chunked_subtitles = []
     start_timestamp = None
     content_chunk = ""
     count = 0
     index = 0
+
     for i in range(len(parsed_subtitles)):
         if count == 0:
             start_timestamp = parsed_subtitles[i].start
 
         count += 1
-        if count == len(parsed_subtitles) - 1:
-            content_chunk+=f'\n{parsed_subtitles[i].content}'
-            chunked_subtitles+=[Subtitle(index, start_timestamp, parsed_subtitles[i].end, content_chunk)]
-        elif count == 16:
-            content_chunk+=f'\n{parsed_subtitles[i].content}'
-            chunked_subtitles+=[Subtitle(index, start_timestamp, parsed_subtitles[i].end, content_chunk)]
+        content_chunk += f'\n{parsed_subtitles[i].content}'
+        
+        if count == 16 or i == len(parsed_subtitles) - 1:
+            chunked_subtitles.append(Subtitle(index, start_timestamp, parsed_subtitles[i].end, content_chunk))
             count = 0
             index += 1
             start_timestamp = None
             content_chunk = ""
-        else:
-            content_chunk+=f'\n{parsed_subtitles[i].content}'
 
     conn = s2.connect('***REMOVED***')
-    with conn:
+    try:
         with conn.cursor() as cur:
-            print("STARTING THE UPLOAD")
             query = """
                 INSERT INTO lectures (lecture_id, lecture_title, course_id, num_chunks)
                 VALUES (%s, %s, %s, %s);
             """
-            data = (yt.title, yt.title, 'A', len(chunked_subtitles))
-            cur.execute(query, data)
+            cur.execute(query, (link, yt.title, 'A', len(chunked_subtitles)))
+            conn.commit()
+        
+        data = []
+        for sub in chunked_subtitles:
+            embedding = genai.embed_content(model='models/embedding-001',
+                                            content=sub.content,
+                                            task_type="retrieval_document",
+                                            title=yt.title)['embedding']
+            embedding_json = json.dumps(embedding)
 
-            for sub in chunked_subtitles:
-                embedding = genai.embed_content(model='models/embedding-001',
-                                                content=sub.content,
-                                                task_type="retrieval_document",
-                                                title=yt.title)['embedding']
-
-                upload_query = f"""
+            data.append({
+                'lecture_id': link,
+                'content_str': sub.content,
+                'start_time': srt.timedelta_to_srt_timestamp(sub.start),
+                'end_time': srt.timedelta_to_srt_timestamp(sub.end),
+                'subtitle_index': sub.index,
+                'vector': embedding_json
+            })
+        
+        with conn.cursor() as cursor:
+            for sub in data:
+                insert_query = """
                     INSERT INTO subtitle_embedding (lecture_id, content_str, start_time, end_time, subtitle_index, vector)
-                    VALUES ("A", "{sub.content}", "{srt.timedelta_to_srt_timestamp(sub.start)}","{srt.timedelta_to_srt_timestamp(sub.end)}", "{sub.index}", JSON_ARRAY_PACK("{embedding}"))
+                    VALUES (%s, %s, %s, %s, %s, JSON_ARRAY_PACK(%s))
                 """
-                cur.execute(upload_query)
-    
-        conn.commit()
+                attempts = 0
+                while attempts < 3:
+                    try:
+                        cursor.execute(insert_query, (sub['lecture_id'], sub['content_str'], sub['start_time'], sub['end_time'], sub['subtitle_index'], sub['vector']))
+                        conn.commit()
+                        break 
+                    except Exception as e:
+                        print(f"Error inserting row: {e}")
+                        attempts += 1
+                        if attempts < 3:
+                            print(f"Retrying in 2 seconds...")
+                            await asyncio.sleep(2)
+                        else:
+                            print("Max retries reached, moving to next row.")
+                            break
+    except Exception as e:
+        return "Error"
+    finally:
+        conn.close()
+
+    return {"status": "success", "message": "Lecture and subtitles processed successfully"}
+
 
     # Select the highest quality video
     # caption = yt.captions.get_by_language_code('en')
 
     # return caption.generate_srt_caption()
+
+@app.post('/clean_lecture')
+async def clearLecture(link: str):
+    conn = s2.connect('***REMOVED***')
+    with conn:
+        with conn.cursor() as cur:
+            query = f"""
+                DELETE FROM subtitle_embedding WHERE lecture_id = "{link}";
+            """
+            data = (link.strip())
+            cur.execute(query)
+            query = f"""
+                DELETE FROM lectures WHERE lecture_id = "{link}";
+            """
+            data = (link.strip())
+            cur.execute(query)
+        conn.commit()
 
 
 @app.get('/query_lecture')
@@ -297,7 +377,7 @@ async def getTimestamps(query: str):
                 parse_start_time = start_times[i].split(",")[0].split(":")
                 seconds = (int(parse_start_time[0]) * 3600) + (int(parse_start_time[1]) * 60) + int(parse_start_time[2]) - 5
                 timestamp = {
-                    "label": f'{start_times[i]} - {end_times[i]}',
+                    "label": f'{start_times[i]}',
                     "seconds": seconds
                 }
                 timestamps += [timestamp]
