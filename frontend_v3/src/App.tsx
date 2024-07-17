@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import VideoChunk from "./components/NotebookChunks/VideoChunk"
+import TestChunk from "./components/NotebookChunks/TestChunk"
 
 export default function App() {
   return (
@@ -54,6 +56,8 @@ export default function App() {
           <Button>Deploy</Button>
         </CardFooter>
       </Card>
+      <VideoChunk/>
+      <TestChunk/>
     </div>
   )
 }
