@@ -15,15 +15,16 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { VideoChunkProps } from '../../constants/ChunkTypes'
 
-export default function VideoChunk() {
+export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode }) => {
   return (
-    <Tabs defaultValue="account" className="w-[400px]">
+    <Tabs defaultValue="preview" className="w-[700px]">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Preview</TabsTrigger>
-        <TabsTrigger value="password">Edit</TabsTrigger>
+        <TabsTrigger value="preview">Preview</TabsTrigger>
+        <TabsTrigger value="edit">Edit</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">
+      <TabsContent value="preview">
         <Card>
           <CardHeader>
             <CardTitle>Account</CardTitle>
@@ -42,11 +43,14 @@ export default function VideoChunk() {
             </div>
           </CardContent>
           <CardFooter>
+            {order}
+            {url}
+            {defaultEditMode}
             <Button>Search</Button>
           </CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="password">
+      <TabsContent value="edit">
         <Card>
           <CardHeader>
             <CardTitle>Password</CardTitle>

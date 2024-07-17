@@ -1,63 +1,22 @@
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import VideoChunk from "./components/NotebookChunks/VideoChunk"
-import TestChunk from "./components/NotebookChunks/TestChunk"
+import { NBChunksProvider } from "./services/NBChunksProvider"
+import { NBMetadataProvider } from "./services/NBMetadataProvider"
+import { NBTimestampProvider } from "./services/NBTimestampsProvider"
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Notebook from './pages/Notebook';
 
 export default function App() {
   return (
-    <div className="w-full flex flex-col space-y-10 items-center py-10">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Create project</CardTitle>
-          <CardDescription>Deploy your new project in one-click.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Name of your project" />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Framework</Label>
-                <Select>
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="next">Next.js</SelectItem>
-                    <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                    <SelectItem value="astro">Astro</SelectItem>
-                    <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Deploy</Button>
-        </CardFooter>
-      </Card>
-      <VideoChunk/>
-      <TestChunk/>
-    </div>
+    <NBChunksProvider>
+      <NBMetadataProvider>
+        <NBTimestampProvider>
+          <Router>
+            <Routes>
+              <Route path='/' />
+              <Route path='/notebook' Component={Notebook} />
+            </Routes>
+          </Router>
+        </NBTimestampProvider>
+      </NBMetadataProvider>
+    </NBChunksProvider>
   )
 }
