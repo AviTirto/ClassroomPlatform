@@ -1,7 +1,7 @@
 import { useContext, useState, createContext } from 'react'
 import { CHUNK_TYPES, VideoChunkJSON, TextChunkJSON } from '@/constants/ChunkTypes';
 import { TextChunk } from '@/components/NotebookChunks/TextChunk';
-import { VideoChunk } from '@/components/NotebookChunks/VideoChunk';
+import { VideoChunk } from '@/components/NotebookChunks/VideoChunk/VideoChunk';
 import { NBChunksContextType, NBRenderChunksContextType, NBUpdateChunksContextType, NBDeleteChunksContextType } from '@/constants/NBContextTypes'
 import { NBChunksProviderProps } from '@/constants/NBProviderProps';
 

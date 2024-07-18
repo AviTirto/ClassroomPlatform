@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export const CHUNK_TYPES = {
     TEXT: 'TEXT',
     VIDEO: 'VIDEO',
@@ -5,13 +7,13 @@ export const CHUNK_TYPES = {
 }
 
 export interface VideoChunkJSON {
-    type: typeof CHUNK_TYPES.VIDEO; 
+    type: typeof CHUNK_TYPES.VIDEO;
     order: number;
-    url: string; 
+    url: string;
 }
 
 export interface TextChunkJSON {
-    type: typeof CHUNK_TYPES.TEXT; 
+    type: typeof CHUNK_TYPES.TEXT;
     order: number;
     content: string;
 }
@@ -26,4 +28,17 @@ export interface TextChunkProps {
     order: number;
     content?: string;
     defaultEditMode: boolean;
+}
+
+export interface EditVideoChunkProps {
+    title: string;
+    description: string;
+    url?: string;
+    children: ReactNode;
+}
+
+export interface ChunkOptionsProps {
+    onEditClick: () => void;
+    onDeleteClick: () => void;
+    isDialog: boolean;
 }
