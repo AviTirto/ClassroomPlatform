@@ -35,6 +35,7 @@ export interface EditVideoChunkProps {
     description: string;
     url?: string;
     children: ReactNode;
+    // handleUpdate: () => void;
 }
 
 export interface ChunkOptionsProps {

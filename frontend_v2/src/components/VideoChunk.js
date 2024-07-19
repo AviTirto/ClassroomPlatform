@@ -18,6 +18,7 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
     const [loadingState, setLoadingState] = useState(false)
     const [clips, setClips] = useState([])
     const [inputQuery, setInputQuery] = useState("")
+    const [notValidVideo, setNotValidVideo] = useState(false)
 
     const handleSearch = async () => {
         await setLoadingState(true)
@@ -51,6 +52,9 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
         setInputQuery("")
         const title = await LectureAPI.postLecture(newUrl);
         setLoadingState(false)
+        if (title == null){
+            setNotValidVideo(true)
+        }
     }
 
     const handleDelete = () => {
@@ -105,12 +109,15 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
                                     </svg>
                                 </div>
                                 :
-                                <button
-                                    className='px-2 py-1 rounded-md bg-blue-400 text-white hover:font-bold hover:px-3 duration-300'
-                                    onClick={handleSearch}
-                                >
-                                    Search
-                                </button>
+                                notValidVideo ?
+                                    <p>No Valid Subtitles</p>
+                                    :
+                                    <button
+                                        className='px-2 py-1 rounded-md bg-blue-400 text-white hover:font-bold hover:px-3 duration-300'
+                                        onClick={handleSearch}
+                                    >
+                                        Search
+                                    </button>
                         }
                     </div>
                     {

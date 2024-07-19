@@ -25,10 +25,10 @@ import { ChunkOptions } from "../ChunkOptions"
 import { LectureAPI } from "@/apis/LectureAPI"
 import { EditVideoChunk } from "./EditVideoChunk"
 import { Label } from "@/components/ui/label"
+import ReactPlayer from 'react-player'
 
 
 export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode }) => {
-    const [editMode, setEditMode] = useState(defaultEditMode);
     const inputRef = useRef(null);
     const videoRef = useRef(null);
     const updateChunk = useNBUpdateChunks();
@@ -77,9 +77,6 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
     //     deleteChunk(order);
     // }
 
-    const handleEditClick = () => {
-        setEditMode(true);
-    };
 
     const handleDeleteClick = () => {
 
@@ -95,23 +92,35 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                 <EditVideoChunk
                     title={"Title"}
                     description={"description"}
-                    url = { lectUrl }
-                    >
+                    url={lectUrl}
+                    // handleUpdate={}
+                >
                     <ChunkOptions
-                        onEditClick={handleEditClick}
+                        onEditClick={() => {}}
                         onDeleteClick={handleDeleteClick}
-                        isDialog = { true }
+                        isDialog={true}
                     />
                 </EditVideoChunk>
             </CardHeader>
             <CardContent>
                 <div className="grid gap-6">
                     <div className="relative rounded-lg overflow-hidden aspect-video">
-                        <video
-                            className="w-full h-full object-cover"
-                            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                            controls
-                        />
+                        {videoRef.current ?
+                            <ReactPlayer
+                                ref={videoRef}
+                                url={lectUrl}
+                                width='100%'
+                                height='100%'
+                                className='react-player'
+                                controls={true}
+                            />
+                            :
+                            <video
+                                className="w-full h-full object-cover"
+                                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                                controls
+                            />
+                        }
                     </div>
                     <div className="grid gap-4">
                         <div className="flex items-center gap-2">
@@ -120,55 +129,26 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                                 <SearchIcon className="w-5 h-5" />
                             </Button>
                         </div>
-                        {/* <div className="grid gap-2">
-                            <div className="flex items-center gap-2 bg-muted rounded-md p-2 cursor-pointer hover:bg-muted-foreground/10">
-                                <div className="flex items-center gap-1 bg-black/50 px-2 py-1 rounded-md text-sm text-white">
-                                    <ClockIcon className="w-4 h-4" />
-                                    <span>0:45</span>
-                                </div>
-                                <div className="flex-1 line-clamp-1">Setting up the development environment</div>
-                            </div>
-                            <div className="flex items-center gap-2 bg-muted rounded-md p-2 cursor-pointer hover:bg-muted-foreground/10">
-                                <div className="flex items-center gap-1 bg-black/50 px-2 py-1 rounded-md text-sm text-white">
-                                    <ClockIcon className="w-4 h-4" />
-                                    <span>2:34</span>
-                                </div>
-                                <div className="flex-1 line-clamp-1">Creating the first React component</div>
-                            </div>
-                            <div className="flex items-center gap-2 bg-muted rounded-md p-2 cursor-pointer hover:bg-muted-foreground/10">
-                                <div className="flex items-center gap-1 bg-black/50 px-2 py-1 rounded-md text-sm text-white">
-                                    <ClockIcon className="w-4 h-4" />
-                                    <span>5:12</span>
-                                </div>
-                                <div className="flex-1 line-clamp-1">Styling the application with Tailwind CSS</div>
-                            </div>
-                        </div> */}
                         <div className="grid gap-2">
                             <div className="grid">
-                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold">
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                        <ClockIcon className="w-4 h-4" />
-                                        <span>00:12:34</span>
-                                    </div>
+                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
+                                    <ClockIcon className="w-4 h-4" />
+                                    00:12:34
                                     <div className="line-clamp-1">
                                         Introducing the frontend cloud, where frontend developers build
                                         {/* , test, and deploy high-quality web applications efficiently and quickly, all on Vercel. */}
                                     </div>
                                 </button>
-                                <button className="flex gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold">
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                        <ClockIcon className="w-4 h-4" />
-                                        <span>00:34:56</span>
-                                    </div>
+                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
+                                    <ClockIcon className="w-4 h-4" />
+                                    00:34:56
                                     <div className="line-clamp-1">
                                         Leveraging the power of the frontend cloud to create seamless user experiences.
                                     </div>
                                 </button>
-                                <button className="flex gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold">
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                        <ClockIcon className="w-4 h-4" />
-                                        <span>00:56:78</span>
-                                    </div>
+                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
+                                    <ClockIcon className="w-4 h-4" />
+                                    00:56:78
                                     <div className="line-clamp-1">
                                         Exploring the latest advancements in frontend development with the Vercel platform.
                                     </div>

@@ -3,53 +3,99 @@ import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, D
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 
-export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, description, url, children }: EditVideoChunkProps) => {
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+
+const formSchema = z.object({
+    new_title: z.string().min(2).max(50),
+    new_description: z.string().min(2).max(150),
+    new_url: z.string().min(2).max(50),
+})
+
+export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, description, url, children, handleUpdate }: EditVideoChunkProps) => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            new_title: title,
+            new_description: description,
+            new_url: url,
+        },
+    })
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values)
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="title" className="text-right">
-                            Title
-                        </Label>
-                        <Input
-                            id="title"
-                            defaultValue={title}
-                            className="col-span-3"
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="new_title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Title</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter title" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Enter a new title for the video (2-50 characters).
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="description" className="text-right">
-                            Description
-                        </Label>
-                        <Input
-                            id="description"
-                            defaultValue={description}
-                            className="col-span-3"
+                        <FormField
+                            control={form.control}
+                            name="new_description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter description" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Enter a new description (2-150 characters).
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="url" className="text-right">
-                            URL
-                        </Label>
-                        <Input
-                            id="url"
-                            defaultValue={url}
-                            className="col-span-3"
+                        <FormField
+                            control={form.control}
+                            name="new_url"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>URL</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Enter URL" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Enter a new URL (2-50 characters).
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
                         />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                </DialogFooter>
+                        <Button type="submit">Update</Button>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     )
