@@ -23,7 +23,8 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
     const handleSearch = async () => {
         await setLoadingState(true)
         if (inputQuery) {
-            const newClips = await LectureAPI.queryLecture(inputQuery)
+            var newClips = await LectureAPI.queryLecture(inputQuery)
+            newClips = [...new Set(newClips)]
             newClips.sort((a, b) => { return a.seconds - b.seconds})
             await setClips(newClips)
         }
@@ -54,6 +55,8 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
         setLoadingState(false)
         if (title == null){
             setNotValidVideo(true)
+        }else {
+            setNotValidVideo(false)
         }
     }
 
@@ -126,7 +129,8 @@ export default function VideoChunk({ order, url, defaultEditMode }) {
                                 <div
                                     className='w-full px-20 flex items-center justify-center'
                                 >
-                                    {clips.map(clip => {
+                                    {
+                                    clips.map(clip => {
                                         return (
                                             <button
                                                 key={clip.label}

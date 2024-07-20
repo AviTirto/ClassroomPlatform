@@ -11,6 +11,7 @@ from moviepy.editor import *
 from youtube_transcript_api import YouTubeTranscriptApi
 import asyncio
 import aiohttp
+import time
 
 # youtube api key: ***REMOVED***
 
@@ -196,8 +197,10 @@ async def parse_timestamps(link: str):
     try:
         captions = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'a.en'])
     except Exception:
-        print(f"No Valid English Subtitles")
+        print(YouTubeTranscriptApi.list_transcript(video_id))
+        print("No English Subtitles")
         return None
+
     if not captions:
         return None
 
