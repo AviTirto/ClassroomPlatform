@@ -28,31 +28,21 @@ import { EditVideoChunk } from "./EditVideoChunk"
 
 // API Imports
 import { LectureAPI } from "@/apis/LectureAPI"
-import { lectForm, lectSchema } from "@/constants/APITypes"
+import { TimestampJSON, lectForm, lectSchema } from "@/constants/APITypes"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 
-export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode, title, description }) => {
+export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, title, description }) => {
     // Context Services
     const updateChunk = useNBUpdateChunks()
 
 
     // Component Specific React Management
-    const videoRef = useRef(null);
+    const videoRef = useRef<ReactPlayer | null>(null);
     const [loadingState, setLoadingState] = useState(false)
-    const [clips, setClips] = useState([])
+    const [clips, setClips] = useState<TimestampJSON[]>([])
     const [inputQuery, setInputQuery] = useState("")
     const [validVideo, setValidVideo] = useState(true)
-
-    // const handleSearch = async () => {
-    //     await setLoadingState(true)
-    //     if (inputQuery) {
-    //         const newClips = await LectureAPI.queryLecture(inputQuery)
-    //         newClips.sort((a, b) => { return a.seconds - b.seconds})
-    //         await setClips(newClips)
-    //     }
-    //     setLoadingState(false)
-    // }
 
     // const handleDelete = () => {
     //     deleteChunk(order);
@@ -115,6 +105,27 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
         }
     }
 
+    // Lecture Search Functionality
+    const handleSearch = async () => {
+        await setLoadingState(true)
+        if (inputQuery) {
+            const newClips = await LectureAPI.queryLecture(inputQuery)
+            newClips.sort((a:TimestampJSON, b:TimestampJSON) => { return a.seconds - b.seconds })
+            await setClips(newClips)
+        }
+        setLoadingState(false)
+    }
+
+    const setTimeStamp = (seconds: number) => {
+        if (videoRef.current) {
+            const internalPlayer = videoRef.current.getInternalPlayer();
+            if (internalPlayer && internalPlayer.seekTo && internalPlayer.playVideo) {
+                internalPlayer.seekTo(seconds, true);
+                internalPlayer.playVideo();
+            }
+        }
+    };
+
 
     const handleDeleteClick = () => {
 
@@ -163,41 +174,44 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                     </div>
                     <div className="grid gap-4">
                         <div className="flex items-center gap-2">
-                            <Input type="search" placeholder="Search for timestamps" className="flex-1 focus-visible:ring-offset-0 focus-visible:ring-0 hover:bg-gray-50 duration-500" />
-                            { loadingState ?
-                            <Button variant="ghost">
-                                <LoadingIcon className="w-5 h-5 animate-spin"/>
-                            </Button>
-                            :
-                            <Button variant="ghost">
-                                <SearchIcon className="w-5 h-5" />
-                            </Button>
+                            <Input 
+                                type="search"
+                                placeholder="Search lecture..."
+                                className="flex-1 focus-visible:ring-offset-0 focus-visible:ring-0 hover:bg-gray-50 duration-500"
+                                value={inputQuery}
+                                onChange={e => setInputQuery(e.target.value)}
+                            />
+                            {loadingState ?
+                                <Button variant="ghost">
+                                    <LoadingIcon className="w-5 h-5 animate-spin" />
+                                </Button>
+                                :
+                                <Button
+                                    variant="ghost"
+                                    onClick={handleSearch}
+                                >
+                                    <SearchIcon className="w-5 h-5" />
+                                </Button>
                             }
                         </div>
                         <div className="grid gap-2">
                             <div className="grid">
-                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
-                                    <ClockIcon className="w-4 h-4" />
-                                    00:12:34
-                                    <div className="line-clamp-1">
-                                        Introducing the frontend cloud, where frontend developers build
-                                        {/* , test, and deploy high-quality web applications efficiently and quickly, all on Vercel. */}
-                                    </div>
-                                </button>
-                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
-                                    <ClockIcon className="w-4 h-4" />
-                                    00:34:56
-                                    <div className="line-clamp-1">
-                                        Leveraging the power of the frontend cloud to create seamless user experiences.
-                                    </div>
-                                </button>
-                                <button className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500">
-                                    <ClockIcon className="w-4 h-4" />
-                                    00:56:78
-                                    <div className="line-clamp-1">
-                                        Exploring the latest advancements in frontend development with the Vercel platform.
-                                    </div>
-                                </button>
+                                {
+                                    clips.map(clip => {
+                                        return (
+                                            <button
+                                                className="flex justify-start items-center gap-2 text-sm cursor-pointer px-2 py-1 border-l-2 hover:border-l-4 hover:py-2 duration-500 hover:font-bold hover:text-blue-500 hover:border-blue-500"
+                                                onClick={() => setTimeStamp(clip.seconds)}
+                                            >
+                                                <ClockIcon className="w-4 h-4" />
+                                                {clip.label}
+                                                <div className="line-clamp-1">
+                                                    {clip.content}
+                                                </div>
+                                            </button>
+                                        )
+                                    })
+                                }
                             </div>
                         </div>
                     </div>

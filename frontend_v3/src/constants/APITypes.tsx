@@ -7,3 +7,9 @@ export const lectSchema = z.object({
 })
 
 export type lectForm = z.infer<typeof lectSchema>
+
+export type TimestampJSON = {
+    label: string,
+    seconds: number,
+    content: string
+}

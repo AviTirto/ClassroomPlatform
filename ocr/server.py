@@ -345,7 +345,8 @@ async def getTimestamps(query: str):
                 
                 timestamp = {
                     "label": f'{s_timestamps[i]}',
-                    "seconds": seconds[i]
+                    "seconds": seconds[i],
+                    "content": {subtitles[i][:80] + '...'}
                 }
                 timestamps += [timestamp]
             return timestamps
