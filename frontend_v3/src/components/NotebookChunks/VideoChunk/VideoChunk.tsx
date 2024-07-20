@@ -8,7 +8,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SearchIcon, ClockIcon } from "@/assets/Icons"
+import { SearchIcon, ClockIcon, LoadingIcon } from "@/assets/Icons"
 
 // React Functionality Imports
 import { useState, useRef } from 'react'
@@ -51,30 +51,6 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
     //         newClips.sort((a, b) => { return a.seconds - b.seconds})
     //         await setClips(newClips)
     //     }
-    //     setLoadingState(false)
-    // }
-
-    // async function handleUpdate() {
-    //     if (lectUrl === inputRef.current.value) {
-    //         return;
-    //     }
-    //     const newUrl = inputRef.current.value;
-    //     await LectureAPI.cleanLecture(lectUrl);
-    //     setLoadingState(true);
-    //     setLectUrl(newUrl);
-
-    //     const updatedChunk = {
-    //         type: CHUNK_TYPES.VIDEO,
-    //         'order': order,
-    //         'url': inputRef.current.value,
-    //     }
-
-    //     updateChunk(updatedChunk);
-    //     setEditMode(!editMode);
-    //     newUpdatedAt();
-    //     setClips([])
-    //     setInputQuery("")
-    //     const title = await LectureAPI.postLecture(newUrl);
     //     setLoadingState(false)
     // }
 
@@ -188,9 +164,15 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                     <div className="grid gap-4">
                         <div className="flex items-center gap-2">
                             <Input type="search" placeholder="Search for timestamps" className="flex-1 focus-visible:ring-offset-0 focus-visible:ring-0 hover:bg-gray-50 duration-500" />
+                            { loadingState ?
+                            <Button variant="ghost">
+                                <LoadingIcon className="w-5 h-5 animate-spin"/>
+                            </Button>
+                            :
                             <Button variant="ghost">
                                 <SearchIcon className="w-5 h-5" />
                             </Button>
+                            }
                         </div>
                         <div className="grid gap-2">
                             <div className="grid">

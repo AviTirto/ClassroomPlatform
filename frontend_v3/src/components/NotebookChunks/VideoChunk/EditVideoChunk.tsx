@@ -73,7 +73,9 @@ export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, descripti
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Update</Button>
+                        <DialogTrigger asChild>
+                            <Button type="submit">Update</Button>
+                        </DialogTrigger>
                     </form>
                 </Form>
             </DialogContent>
