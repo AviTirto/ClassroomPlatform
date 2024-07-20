@@ -12,6 +12,8 @@ import { SearchIcon, ClockIcon } from "@/assets/Icons"
 
 // React Functionality Imports
 import { useState, useRef } from 'react'
+import ReactPlayer from 'react-player'
+import { useForm } from "react-hook-form"
 
 // Context Management Imports
 import { useNBDeleteChunks, useNBUpdateChunks } from "@/services/NBChunksProvider"
@@ -21,23 +23,18 @@ import { useNewUpdatedAt } from "@/services/NBTimestampsProvider"
 import { VideoChunkProps } from "@/constants/ChunkTypes"
 import { ChunkOptions } from "../ChunkOptions"
 
+// Component Imports
+import { EditVideoChunk } from "./EditVideoChunk"
+
 // API Imports
 import { LectureAPI } from "@/apis/LectureAPI"
-import { EditVideoChunk } from "./EditVideoChunk"
-import { Label } from "@/components/ui/label"
-import ReactPlayer from 'react-player'
+import { z } from "zod"
+import { lectForm, lectSchema } from "@/constants/APITypes"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 
-export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode }) => {
-    const inputRef = useRef(null);
+export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode, title, description }) => {
     const videoRef = useRef(null);
-    const updateChunk = useNBUpdateChunks();
-    const newUpdatedAt = useNewUpdatedAt();
-    const deleteChunk = useNBDeleteChunks();
-    const [lectUrl, setLectUrl] = useState(url)
-    const [loadingState, setLoadingState] = useState(false)
-    const [clips, setClips] = useState([])
-    const [inputQuery, setInputQuery] = useState("")
 
     // const handleSearch = async () => {
     //     await setLoadingState(true)
@@ -77,6 +74,20 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
     //     deleteChunk(order);
     // }
 
+    // Lecture Upload Functionality
+    const form = useForm<lectForm>({
+        resolver: zodResolver(lectSchema),
+        defaultValues: {
+            new_title: title,
+            new_description: description,
+            new_url: url,
+        },
+    })
+
+    function onUpdate(values: lectForm) {
+        console.log(values)
+    }
+
 
     const handleDeleteClick = () => {
 
@@ -92,8 +103,9 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                 <EditVideoChunk
                     title={"Title"}
                     description={"description"}
-                    url={lectUrl}
-                    // handleUpdate={}
+                    url={url}
+                    onUpdate={onUpdate}
+                    form={form}
                 >
                     <ChunkOptions
                         onEditClick={() => {}}
@@ -108,7 +120,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                         {videoRef.current ?
                             <ReactPlayer
                                 ref={videoRef}
-                                url={lectUrl}
+                                url={url}
                                 width='100%'
                                 height='100%'
                                 className='react-player'

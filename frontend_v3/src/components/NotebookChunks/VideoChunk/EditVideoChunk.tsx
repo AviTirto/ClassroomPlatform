@@ -1,7 +1,9 @@
+// Component Imports
 import { EditVideoChunkProps } from "@/constants/ChunkTypes";
+
+// Styling Imports
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
     Form,
@@ -13,29 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-
-const formSchema = z.object({
-    new_title: z.string().min(2).max(50),
-    new_description: z.string().min(2).max(150),
-    new_url: z.string().min(2).max(50),
-})
-
-export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, description, url, children, handleUpdate }: EditVideoChunkProps) => {
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            new_title: title,
-            new_description: description,
-            new_url: url,
-        },
-    })
-
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
-    }
+export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, description, url, children, onUpdate, form }: EditVideoChunkProps) => {
 
     return (
         <Dialog>
@@ -44,7 +24,7 @@ export const EditVideoChunk: React.FC<EditVideoChunkProps> = ({ title, descripti
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onUpdate)} className="space-y-8">
                         <FormField
                             control={form.control}
                             name="new_title"

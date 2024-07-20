@@ -36,7 +36,9 @@ export function NBChunksProvider({ children }: NBChunksProviderProps) {
         {
             type: CHUNK_TYPES.VIDEO,
             order: 1,
-            url: ""
+            url: "",
+            title: "Example Title",
+            description: "This is an example description"
         }
     ])
 
@@ -60,6 +62,8 @@ export function NBChunksProvider({ children }: NBChunksProviderProps) {
                     order={videoChunk.order}
                     url={videoChunk.url}
                     defaultEditMode={videoChunk.url.length === 0 ? true : false}
+                    title={videoChunk.title}
+                    description={videoChunk.description}
                 />
             )
         } else {

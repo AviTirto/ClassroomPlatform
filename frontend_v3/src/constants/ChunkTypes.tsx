@@ -1,5 +1,10 @@
 import { ReactNode } from "react";
 
+// API Imports
+import { z } from "zod"
+import { lectForm } from "./APITypes";
+import { UseFormReturn } from "react-hook-form";
+
 export const CHUNK_TYPES = {
     TEXT: 'TEXT',
     VIDEO: 'VIDEO',
@@ -10,6 +15,8 @@ export interface VideoChunkJSON {
     type: typeof CHUNK_TYPES.VIDEO;
     order: number;
     url: string;
+    title: string,
+    description: string,
 }
 
 export interface TextChunkJSON {
@@ -22,6 +29,8 @@ export interface VideoChunkProps {
     order: number;
     url?: string;
     defaultEditMode: boolean;
+    title: string;
+    description: string
 }
 
 export interface TextChunkProps {
@@ -35,7 +44,8 @@ export interface EditVideoChunkProps {
     description: string;
     url?: string;
     children: ReactNode;
-    // handleUpdate: () => void;
+    onUpdate: (values: lectForm) => (void);
+    form: UseFormReturn<lectForm>;
 }
 
 export interface ChunkOptionsProps {
