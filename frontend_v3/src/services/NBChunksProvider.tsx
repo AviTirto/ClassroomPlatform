@@ -21,8 +21,8 @@ export const useNBDeleteChunks = () => {
     return useContext(NBDeleteChunksContext)
 }
 
-const NBChunksContext = createContext<NBChunksContextType | undefined>(undefined);
-const NBRenderChunksContext = createContext<NBRenderChunksContextType | undefined>(undefined);
+const NBChunksContext = createContext<NBChunksContextType>([]);
+const NBRenderChunksContext = createContext<NBRenderChunksContextType>(() => {return null});
 const NBUpdateChunksContext = createContext<NBUpdateChunksContextType>(useNBUpdateChunks);
 const NBDeleteChunksContext = createContext<NBDeleteChunksContextType | undefined>(undefined);
 

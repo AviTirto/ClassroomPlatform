@@ -168,7 +168,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
             <CardContent>
                 <div className="grid gap-6">
                     <div className="relative rounded-lg overflow-hidden aspect-video">
-                        {videoRef.current ?
+                        {url.length > 0 ?
                             <ReactPlayer
                                 ref={videoRef}
                                 url={url}

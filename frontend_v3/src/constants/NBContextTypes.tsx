@@ -1,4 +1,4 @@
-import { VideoChunkJSON, TextChunkJSON, VideoChunkProps, TextChunkProps } from "./ChunkTypes";
+import { VideoChunkJSON, TextChunkJSON } from "./ChunkTypes";
 
 export type NBChunksContextType = (VideoChunkJSON | TextChunkJSON)[];
 
