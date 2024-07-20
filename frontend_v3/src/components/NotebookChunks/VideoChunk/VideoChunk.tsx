@@ -20,7 +20,7 @@ import { useNBDeleteChunks, useNBUpdateChunks } from "@/services/NBChunksProvide
 import { useNewUpdatedAt } from "@/services/NBTimestampsProvider"
 
 // Type Definition Imports
-import { VideoChunkProps } from "@/constants/ChunkTypes"
+import { CHUNK_TYPES, VideoChunkJSON, VideoChunkProps } from "@/constants/ChunkTypes"
 import { ChunkOptions } from "../ChunkOptions"
 
 // Component Imports
@@ -28,13 +28,21 @@ import { EditVideoChunk } from "./EditVideoChunk"
 
 // API Imports
 import { LectureAPI } from "@/apis/LectureAPI"
-import { z } from "zod"
 import { lectForm, lectSchema } from "@/constants/APITypes"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 
 export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditMode, title, description }) => {
+    // Context Services
+    const updateChunk = useNBUpdateChunks()
+
+
+    // Component Specific React Management
     const videoRef = useRef(null);
+    const [loadingState, setLoadingState] = useState(false)
+    const [clips, setClips] = useState([])
+    const [inputQuery, setInputQuery] = useState("")
+    const [validVideo, setValidVideo] = useState(true)
 
     // const handleSearch = async () => {
     //     await setLoadingState(true)
@@ -84,8 +92,51 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
         },
     })
 
-    function onUpdate(values: lectForm) {
-        console.log(values)
+    async function onUpdate(values: lectForm) {
+        console.log("CURRENT URL:", url)
+        console.log("NEW URL:", values.new_url)
+        if (values.new_title !== title) {
+            console.log(values.new_title)
+        }
+
+        if (values.new_description !== description) {
+            console.log(values.new_description)
+        }
+
+        if (values.new_url !== url) {
+            try {
+                const cleanStatus = await LectureAPI.cleanLecture(url);
+                console.log("Clean Lecture Response:", cleanStatus);
+            } catch (error) {
+                console.log(error)
+                return;
+            }
+            setLoadingState(true);
+
+            const updatedChunk: VideoChunkJSON = {
+                'type': CHUNK_TYPES.VIDEO,
+                'order': order,
+                'url': values.new_url,
+                'title': values.new_title,
+                'description': values.new_description
+            }
+
+            updateChunk(updatedChunk);
+            setClips([])
+            setInputQuery("")
+            try {
+                const title = await LectureAPI.postLecture(values.new_url);
+                setLoadingState(false)
+                if (title == null) {
+                    setValidVideo(true)
+                } else {
+                    setValidVideo(false)
+                }
+            } catch (error) {
+                console.log(error)
+                return;
+            }
+        }
     }
 
 
@@ -108,7 +159,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, defaultEditM
                     form={form}
                 >
                     <ChunkOptions
-                        onEditClick={() => {}}
+                        onEditClick={() => { }}
                         onDeleteClick={handleDeleteClick}
                         isDialog={true}
                     />

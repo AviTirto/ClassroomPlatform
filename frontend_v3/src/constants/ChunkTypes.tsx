@@ -27,7 +27,7 @@ export interface TextChunkJSON {
 
 export interface VideoChunkProps {
     order: number;
-    url?: string;
+    url: string;
     defaultEditMode: boolean;
     title: string;
     description: string

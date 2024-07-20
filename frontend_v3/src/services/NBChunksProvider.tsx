@@ -5,11 +5,6 @@ import { VideoChunk } from '@/components/NotebookChunks/VideoChunk/VideoChunk';
 import { NBChunksContextType, NBRenderChunksContextType, NBUpdateChunksContextType, NBDeleteChunksContextType } from '@/constants/NBContextTypes'
 import { NBChunksProviderProps } from '@/constants/NBProviderProps';
 
-const NBChunksContext = createContext<NBChunksContextType | undefined>(undefined);
-const NBRenderChunksContext = createContext<NBRenderChunksContextType | undefined>(undefined);
-const NBUpdateChunksContext = createContext<NBUpdateChunksContextType | undefined>(undefined);
-const NBDeleteChunksContext = createContext<NBDeleteChunksContextType | undefined>(undefined);
-
 export const useNBChunks = () => {
     return useContext(NBChunksContext)
 }
@@ -25,6 +20,11 @@ export const useNBUpdateChunks = () => {
 export const useNBDeleteChunks = () => {
     return useContext(NBDeleteChunksContext)
 }
+
+const NBChunksContext = createContext<NBChunksContextType | undefined>(undefined);
+const NBRenderChunksContext = createContext<NBRenderChunksContextType | undefined>(undefined);
+const NBUpdateChunksContext = createContext<NBUpdateChunksContextType>(useNBUpdateChunks);
+const NBDeleteChunksContext = createContext<NBDeleteChunksContextType | undefined>(undefined);
 
 export function NBChunksProvider({ children }: NBChunksProviderProps) {
     const [chunks, setChunks] = useState([
