@@ -31,16 +31,16 @@ export const ChunkOptions: React.FC<ChunkOptionsProps> = ({ onEditClick, onDelet
                             </Button>
                         </DialogTrigger>
                         : editType === EDIT_TYPES.sheet ?
-                            <SheetTrigger>
+                            <SheetTrigger asChild>
                                 <Button variant="ghost" size="sm" className="p-0 h-fit">
                                     <FilePenIcon className="w-4 h-4 mr-2" />
-                                    Edit Video
+                                    Edit Flashcard
                                 </Button>
                             </SheetTrigger>
                             :
                             <>
                                 <FilePenIcon className="w-4 h-4 mr-2" />
-                                Edit Video
+                                Edit Text
                             </>
                     }
 
