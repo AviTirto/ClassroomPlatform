@@ -1,6 +1,6 @@
 /**
  * v0 by Vercel.
- * @see https://v0.dev/t/tfK8ROtouSr
+ * @see https://v0.dev/t/FCSLbDPbU3d
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 "use client"
@@ -8,11 +8,13 @@
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer"
 
 export default function FlashcardChunk() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [isCorrect, setIsCorrect] = useState(false)
+  const [showExplanation, setShowExplanation] = useState(false)
   const flashcards = [
     {
       question: "What is the capital of France?",
@@ -23,6 +25,8 @@ export default function FlashcardChunk() {
         "Madrid, the lively capital of Spain.",
       ],
       correctAnswer: 0,
+      explanation:
+        "Paris is the capital of France, known for its iconic landmarks like the Eiffel Tower, Notre-Dame Cathedral, and the Louvre Museum. It is a global center of art, fashion, and culture.",
     },
     {
       question: "What is the largest planet in our solar system?",
@@ -33,6 +37,8 @@ export default function FlashcardChunk() {
         "Saturn, the ringed planet with its stunning icy rings.",
       ],
       correctAnswer: 2,
+      explanation:
+        "Jupiter is the largest planet in our solar system, a massive gas giant with a diameter of over 139,000 kilometers. It is known for its iconic Great Red Spot, a massive storm larger than Earth.",
     },
     {
       question: "What is the currency used in Japan?",
@@ -43,6 +49,8 @@ export default function FlashcardChunk() {
         "The British Pound, the currency of the United Kingdom.",
       ],
       correctAnswer: 2,
+      explanation:
+        "The Japanese Yen is the official currency of Japan. It is one of the most traded currencies in the world and is known for its stability and strength.",
     },
     {
       question: "What is the tallest mammal in the world?",
@@ -53,6 +61,8 @@ export default function FlashcardChunk() {
         "The Hippopotamus, the massive semi-aquatic mammal.",
       ],
       correctAnswer: 1,
+      explanation:
+        "The Giraffe is the tallest mammal in the world, with an average height of 4.3 to 5.7 meters. They are known for their long necks and legs, which allow them to reach the highest leaves in the trees.",
     },
   ]
   const handleAnswerClick = (index) => {
@@ -70,6 +80,9 @@ export default function FlashcardChunk() {
     setIsCorrect(false)
     setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcards.length)
   }
+  const handleExplanationClick = () => {
+    setShowExplanation(true)
+  }
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <Card className="w-full max-w-3xl p-8">
@@ -82,7 +95,12 @@ export default function FlashcardChunk() {
               : ""
           }`}
         >
-          <h2 className="text-2xl font-bold mb-4">{flashcards[currentIndex].question}</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{flashcards[currentIndex].question}</h2>
+            <Button variant="outline" onClick={handleExplanationClick}>
+              Explanation
+            </Button>
+          </div>
           <div className="grid grid-cols-1 gap-4">
             {flashcards[currentIndex].answers.map((answer, index) => (
               <button
@@ -104,6 +122,21 @@ export default function FlashcardChunk() {
           <Button onClick={handleNextClick}>Next</Button>
         </div>
       </Card>
+      {showExplanation && (
+        <Drawer>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Explanation</DrawerTitle>
+              <DrawerDescription>{flashcards[currentIndex].explanation}</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">Close</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      )}
     </div>
   )
 }
