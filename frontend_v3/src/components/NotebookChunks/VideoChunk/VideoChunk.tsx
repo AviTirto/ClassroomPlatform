@@ -20,7 +20,7 @@ import { useNBDeleteChunks, useNBUpdateChunks } from "@/services/NBChunksProvide
 import { useNewUpdatedAt } from "@/services/NBTimestampsProvider"
 
 // Type Definition Imports
-import { CHUNK_TYPES, VideoChunkJSON, VideoChunkProps } from "@/constants/ChunkTypes"
+import { CHUNK_TYPES, EDIT_TYPES, VideoChunkJSON, VideoChunkProps } from "@/constants/ChunkTypes"
 import { ChunkOptions } from "../ChunkOptions"
 
 // Component Imports
@@ -148,7 +148,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, title, descr
                     <ChunkOptions
                         onEditClick={() => { }}
                         onDeleteClick={handleDeleteClick}
-                        isDialog={true}
+                        editType={EDIT_TYPES.dialog}
                     />
                 </EditVideoChunk>
             </CardHeader>

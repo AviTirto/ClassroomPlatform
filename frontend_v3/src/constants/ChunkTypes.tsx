@@ -67,8 +67,17 @@ export interface FlashcardChunkProps{
 
 // Options Interface
 
+export const EDIT_TYPES = {
+    default: "default",
+    dialog: "dialog",
+    sheet: "sheet"
+}
+
+
+export type EditType = typeof EDIT_TYPES[keyof typeof EDIT_TYPES];
+
 export interface ChunkOptionsProps {
     onEditClick: () => void;
     onDeleteClick: () => void;
-    isDialog: boolean;
+    editType: EditType;
 }

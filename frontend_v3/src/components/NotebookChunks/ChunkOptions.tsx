@@ -1,11 +1,18 @@
+// Styling Imports
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { FilePenIcon, TrashIcon } from "@/assets/Icons";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { ChunkOptionsProps } from "@/constants/ChunkTypes";
 import { DialogTrigger } from "@/components/ui/dialog"
+import { SheetTrigger } from "../ui/sheet";
 
-export const ChunkOptions: React.FC<ChunkOptionsProps> = ({ onEditClick, onDeleteClick, isDialog }: ChunkOptionsProps) => {
+// Icon Imports
+import { FilePenIcon, TrashIcon } from "@/assets/Icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+
+// Constants Imports
+import { EDIT_TYPES } from "@/constants/ChunkTypes";
+
+export const ChunkOptions: React.FC<ChunkOptionsProps> = ({ onEditClick, onDeleteClick, editType }: ChunkOptionsProps) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -16,18 +23,25 @@ export const ChunkOptions: React.FC<ChunkOptionsProps> = ({ onEditClick, onDelet
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem onClick={onEditClick}>
-                    {isDialog ?
+                    {editType === EDIT_TYPES.dialog ?
                         <DialogTrigger asChild>
                             <Button variant="ghost" size="sm" className="p-0 h-fit">
                                 <FilePenIcon className="w-4 h-4 mr-2" />
                                 Edit Video
                             </Button>
                         </DialogTrigger>
-                        :
-                        <>
-                            <FilePenIcon className="w-4 h-4 mr-2" />
-                            Edit Video
-                        </>
+                        : editType === EDIT_TYPES.sheet ?
+                            <SheetTrigger>
+                                <Button variant="ghost" size="sm" className="p-0 h-fit">
+                                    <FilePenIcon className="w-4 h-4 mr-2" />
+                                    Edit Video
+                                </Button>
+                            </SheetTrigger>
+                            :
+                            <>
+                                <FilePenIcon className="w-4 h-4 mr-2" />
+                                Edit Video
+                            </>
                     }
 
                 </DropdownMenuItem>

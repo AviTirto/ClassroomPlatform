@@ -17,7 +17,10 @@ import {
 } from "@/components/ui/drawer"
 
 // Type Definition Imports
-import { FlashcardChunkProps } from "@/constants/ChunkTypes"
+import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
+
+// Components Import
+import EditFlashcardChunk from "./EditFlashcardChunk"
 import { ChunkOptions } from "../ChunkOptions"
 
 export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ flashcards }) => {
@@ -26,11 +29,13 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ flashcards }) =
         <Card className="w-full max-w-4xl">
             <CardHeader className="grid grid-cols-[1fr_auto] items-start gap-4">
                 <CardTitle>Flashcard Title</CardTitle>
-                <ChunkOptions
-                    onEditClick={() => { }}
-                    onDeleteClick={() => { }}
-                    isDialog={true}
-                />
+                <EditFlashcardChunk>
+                    <ChunkOptions
+                        onEditClick={() => { }}
+                        onDeleteClick={() => { }}
+                        editType={EDIT_TYPES.sheet}
+                    />
+                </EditFlashcardChunk>
             </CardHeader>
             <CardContent className="px-20">
                 <div className="flex items-center mb-8">
@@ -117,7 +122,6 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ flashcards }) =
                                         </DrawerFooter>
                                     </DrawerContent>
                                 </Drawer>
-
                             </Card>
                         </CarouselItem>
                         <CarouselItem>
