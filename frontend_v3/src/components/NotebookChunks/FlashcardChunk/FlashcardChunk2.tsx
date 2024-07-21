@@ -5,16 +5,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
 
 // Type Definition Imports
 import { FlashcardChunkProps } from "@/constants/ChunkTypes"
+import { ChunkOptions } from "../ChunkOptions"
 
 export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ flashcards }) => {
 
     return (
         <Card className="w-full max-w-4xl">
-            <CardHeader className="items-start gap-4">
+            <CardHeader className="grid grid-cols-[1fr_auto] items-start gap-4">
                 <CardTitle>Flashcard Title</CardTitle>
+                <ChunkOptions
+                    onEditClick={() => { }}
+                    onDeleteClick={() => { }}
+                    isDialog={true}
+                />
+            </CardHeader>
+            <CardContent className="px-20">
                 <div className="flex items-center mb-8">
                     <Input
                         placeholder="Search flashcards..."
@@ -42,24 +60,138 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ flashcards }) =
                     >
                         <SearchIcon className="w-5 h-5" />
                     </Button>
+
                 </div>
-            </CardHeader>
-            <CardContent className="px-20">
                 <Carousel>
                     <CarouselContent>
                         <CarouselItem>
-                            <Card className="p-2 py-10 text-center">
-                                1
+                            <Card className="px-10 py-10 text-center flex flex-col space-y-2">
+                                <h2 className="text-lg font-bold">Question 1</h2>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 3"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 4"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Drawer>
+                                    <DrawerTrigger>
+                                        <Button className="place-self-start">
+                                            Explanation
+                                        </Button>
+                                    </DrawerTrigger>
+                                    <DrawerContent>
+                                        <DrawerHeader>
+                                            <DrawerTitle>Explanation</DrawerTitle>
+                                            <DrawerDescription>This is the reason why this is correct or wrong.</DrawerDescription>
+                                        </DrawerHeader>
+                                        <DrawerFooter>
+                                            <DrawerClose>
+                                                <Button variant="destructive">Close</Button>
+                                            </DrawerClose>
+                                        </DrawerFooter>
+                                    </DrawerContent>
+                                </Drawer>
+
                             </Card>
                         </CarouselItem>
                         <CarouselItem>
-                            <Card className="p-2 py-10 text-center">
-                                2
+                            <Card className="px-10 py-10 text-center flex flex-col space-y-2">
+                                <h2 className="text-lg font-bold">Question 2</h2>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 3"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 4"
+                                        rows={2}
+                                    />
+                                </Button>
                             </Card>
                         </CarouselItem>
                         <CarouselItem>
-                            <Card className="p-2 py-10 text-center">
-                                3
+                            <Card className="px-10 py-10 text-center flex flex-col space-y-2">
+                                <h2 className="text-lg font-bold">Question 3</h2>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 1"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 3"
+                                        rows={2}
+                                    />
+                                </Button>
+                                <Button variant="outline" className="w-full px-3 h-fit">
+                                    <textarea
+                                        className="resize-none w-full bg-inherit"
+                                        disabled={true}
+                                        value="option 4"
+                                        rows={2}
+                                    />
+                                </Button>
                             </Card>
                         </CarouselItem>
                     </CarouselContent>
