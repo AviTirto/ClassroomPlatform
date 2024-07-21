@@ -11,18 +11,14 @@ export const CHUNK_TYPES = {
     FLASHCARD: 'FLASHCARD'
 }
 
+// Lecture Interfaces
+
 export interface VideoChunkJSON {
     type: typeof CHUNK_TYPES.VIDEO;
     order: number;
     url: string;
     title: string,
     description: string,
-}
-
-export interface TextChunkJSON {
-    type: typeof CHUNK_TYPES.TEXT;
-    order: number;
-    content: string;
 }
 
 export interface VideoChunkProps {
@@ -33,12 +29,6 @@ export interface VideoChunkProps {
     description: string
 }
 
-export interface TextChunkProps {
-    order: number;
-    content?: string;
-    defaultEditMode: boolean;
-}
-
 export interface EditVideoChunkProps {
     title: string;
     description: string;
@@ -47,6 +37,35 @@ export interface EditVideoChunkProps {
     onUpdate: (values: lectForm) => (void);
     form: UseFormReturn<lectForm>;
 }
+
+// Text Interfaces
+
+export interface TextChunkJSON {
+    type: typeof CHUNK_TYPES.TEXT;
+    order: number;
+    content: string;
+}
+
+export interface TextChunkProps {
+    order: number;
+    content?: string;
+    defaultEditMode: boolean;
+}
+
+// Flashcard Interfaces
+
+export interface FlashcardJSON {
+    question: string;
+    options: string[];
+    answer: number;
+    explanation: string;
+}
+
+export interface FlashcardChunkProps{
+    flashcards: FlashcardJSON[];
+}
+
+// Options Interface
 
 export interface ChunkOptionsProps {
     onEditClick: () => void;
