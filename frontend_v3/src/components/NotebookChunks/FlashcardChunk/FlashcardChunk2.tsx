@@ -3,21 +3,18 @@ import { SearchIcon } from "@/assets/Icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import {
     Command,
-    CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    CommandSeparator,
-    CommandShortcut,
 } from "@/components/ui/command"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 // Type Definition Imports
 import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
@@ -96,10 +93,26 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                         Select All
                                     </Label>
                                 </div>
-                                <Button variant='ghost' className="w-full h-fit justify-start flex gap-2 px-2 py-1 rounded-sm">
-                                    <AddFileIcon className="w-4 h-4" />
-                                    Upload File
-                                </Button>
+                                <Drawer>
+                                    <DrawerTrigger className="w-full">
+                                        <Button variant='ghost' className="w-full h-fit justify-start flex gap-2 px-2 py-1 rounded-sm">
+                                            <AddFileIcon className="w-4 h-4" />
+                                            Upload File
+                                        </Button>
+                                    </DrawerTrigger>
+                                    <DrawerContent>
+                                        <DrawerHeader>
+                                            <DrawerTitle>Upload New File</DrawerTitle>
+                                            <DrawerDescription>Share your course content whether it is .pdf, .ppt or .docs and we'll generate flashcards for you.</DrawerDescription>
+                                            <Input className="max-w-sm" type="file" />
+                                        </DrawerHeader>
+                                        <DrawerFooter className="place-self-start">
+                                            <DrawerClose className="justify-start">
+                                                <Button variant="destructive">Cancel</Button>
+                                            </DrawerClose>
+                                        </DrawerFooter>
+                                    </DrawerContent>
+                                </Drawer>
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>

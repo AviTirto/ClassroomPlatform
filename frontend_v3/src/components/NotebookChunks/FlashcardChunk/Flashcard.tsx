@@ -2,12 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CarouselItem } from "@/components/ui/carousel";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 // Interface Imports
 import { FlashcardProps } from "@/constants/ChunkTypes";
 
-export const Flashcard: React.FC<FlashcardProps> = ({ flashcard })  => {
+export const Flashcard: React.FC<FlashcardProps> = ({ flashcard }) => {
     return (
         <CarouselItem>
             <Card className="px-10 py-10 text-center flex flex-col space-y-2">
@@ -19,31 +24,29 @@ export const Flashcard: React.FC<FlashcardProps> = ({ flashcard })  => {
                                 <textarea
                                     className="resize-none w-full bg-inherit"
                                     disabled={true}
-                                    value={ option }
+                                    value={option}
                                     rows={2}
                                 />
                             </Button>
                         )
                     })
                 }
-                <Drawer>
-                    <DrawerTrigger>
-                        <Button className="place-self-start">
+
+                <Accordion
+                    type="single"
+                    collapsible
+                >
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger
+                            className="text-sm"
+                        >
                             Explanation
-                        </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle>Explanation</DrawerTitle>
-                            <DrawerDescription>{flashcard.explanation}</DrawerDescription>
-                        </DrawerHeader>
-                        <DrawerFooter>
-                            <DrawerClose>
-                                <Button variant="destructive">Close</Button>
-                            </DrawerClose>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </Drawer>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                            {flashcard.explanation}
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             </Card>
         </CarouselItem>
     )
