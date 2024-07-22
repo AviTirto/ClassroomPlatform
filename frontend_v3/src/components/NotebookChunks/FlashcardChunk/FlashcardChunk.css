@@ -1,0 +1,7 @@
+[data-state="checked"] {
+    border-color: black;
+}
+
+[data-state="checked"] + label {
+    color: black;
+}
