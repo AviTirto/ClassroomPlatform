@@ -1,6 +1,10 @@
+// Styling Imports
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-export default function EditFlashcardChunk({ children }) {
+// Interface Imports
+import { EditFlashcardChunkProps } from "@/constants/ChunkTypes";
+
+export const EditFlashcardChunk: React.FC<EditFlashcardChunkProps> = ({ children, flashcards }) => {
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -13,6 +17,13 @@ export default function EditFlashcardChunk({ children }) {
                         This action cannot be undone. This will permanently delete your account
                         and remove your data from our servers. Ya.
                     </SheetDescription>
+                    {
+                        flashcards.map(flashcard => {
+                            return (
+                                <>{flashcard.question}</>
+                            )
+                        })
+                    }
                 </SheetHeader>
             </SheetContent>
         </Sheet>

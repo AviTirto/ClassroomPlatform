@@ -132,7 +132,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, title, descr
     };
 
     return (
-        <Card className="w-full max-w-4xl">
+        <Card className="w-full max-w-3xl">
             <CardHeader className="grid grid-cols-[1fr_auto] items-start gap-4">
                 <div className="space-y-2">
                     <CardTitle>Title</CardTitle>

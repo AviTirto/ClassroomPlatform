@@ -1,10 +1,10 @@
-import { VideoChunkJSON, TextChunkJSON } from "./ChunkTypes";
+import { VideoChunkJSON, TextChunkJSON, FlashcardChunkJSON } from "./ChunkTypes";
 
-export type NBChunksContextType = (VideoChunkJSON | TextChunkJSON)[];
+export type NBChunksContextType = (VideoChunkJSON | TextChunkJSON | FlashcardChunkJSON)[];
 
-export type NBRenderChunksContextType = (chunk: VideoChunkJSON | TextChunkJSON) => (JSX.Element | null);
+export type NBRenderChunksContextType = (chunk: VideoChunkJSON | TextChunkJSON | FlashcardChunkJSON) => (JSX.Element | null);
 
-export type NBUpdateChunksContextType = (chunk: VideoChunkJSON | TextChunkJSON) => void;
+export type NBUpdateChunksContextType = (chunk: VideoChunkJSON | TextChunkJSON | FlashcardChunkJSON) => void;
 
 export type NBDeleteChunksContextType = (order: number) => (void);
 

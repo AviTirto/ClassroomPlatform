@@ -61,7 +61,24 @@ export interface FlashcardJSON {
     explanation: string;
 }
 
+export interface FlashcardChunkJSON {
+    type: typeof CHUNK_TYPES.FLASHCARD;
+    order: number;
+    title: string;
+    flashcards: FlashcardJSON[];
+}
+
+export interface FlashcardProps {
+    flashcard: FlashcardJSON
+}
+
 export interface FlashcardChunkProps{
+    title: string;
+    flashcards: FlashcardJSON[];
+}
+
+export interface EditFlashcardChunkProps{
+    children: ReactNode;
     flashcards: FlashcardJSON[];
 }
 
@@ -72,7 +89,6 @@ export const EDIT_TYPES = {
     dialog: "dialog",
     sheet: "sheet"
 }
-
 
 export type EditType = typeof EDIT_TYPES[keyof typeof EDIT_TYPES];
 
