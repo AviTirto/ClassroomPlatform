@@ -81,7 +81,7 @@ async def upload_file(file: UploadFile):
 
             # Insert New Document to Documents Table
             reader = PdfReader(file.file)
-            query = f"INSERT INTO documents (course_id, doc_name, num_chunks, doc_id) VALUES (0, '{file.filename}', {len(reader.pages)}, '{file.filename}')"
+            query = f"""INSERT INTO documents (course_id, doc_name, num_chunks, doc_id) VALUES (0, "{file.filename}", {len(reader.pages)}, "{file.filename}")"""
             cur.execute(query)
 
             # Embed each page and add it to the doc_embedding table
@@ -93,7 +93,7 @@ async def upload_file(file: UploadFile):
                                                 title=file.filename)
                 query = f"""
                     INSERT INTO doc_embedding (doc_id, content_str, vector)
-                    VALUES ('{file.filename}','{text}', JSON_ARRAY_PACK('{embedding['embedding']}'))"""
+                    VALUES ("{file.filename}","{text}", JSON_ARRAY_PACK("{embedding['embedding']}"))"""
                 cur.execute(query)
 
             # After an entire document is added, then it is committed
@@ -349,7 +349,7 @@ async def getTimestamps(query: str):
                     "content": {subtitles[i][:80] + '...'}
                 }
                 timestamps += [timestamp]
-                
+
             unique_timestamps = []
             for timestamp in timestamps:
                 if timestamp not in unique_timestamps:

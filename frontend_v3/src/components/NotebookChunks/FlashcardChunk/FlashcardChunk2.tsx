@@ -1,5 +1,5 @@
 // Styling Imports
-import { SearchIcon } from "@/assets/Icons"
+import { LoadingIcon, SearchIcon } from "@/assets/Icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -25,7 +25,50 @@ import { ChunkOptions } from "../ChunkOptions"
 import { Flashcard } from "./Flashcard"
 import { Label } from "@/components/ui/label"
 
+// API Imports
+import { FlashcardAPI } from "@/apis/FlashcardAPI"
+
+// React Functionality Imports
+import { useEffect, useState, useRef } from 'react'
+
 export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcards }) => {
+    const [documents, setDocuments] = useState([])
+    const inputFile = useRef<HTMLInputElement>(null);
+    const [loadingState, setLoadingState]= useState(false)
+    useEffect(() => {
+        const fetchFiles = async () => {
+            try {
+                const curFiles = await FlashcardAPI.files()
+                setDocuments(curFiles)
+            } catch (error) {
+                console.error("Failed to fetch files:", error);
+            }
+        }
+
+        fetchFiles();
+    }
+        , []);
+
+    const handleUploadClick = async () => {
+        if (inputFile.current && inputFile.current.files) {
+            setLoadingState(true)
+            const file = inputFile.current.files[0]
+            if (file) {
+                try {
+                    const data = await FlashcardAPI.uploadDoc(file);
+                    console.log(data);
+                } catch (error) {
+                    console.error("Error uploading file:", error);
+                }
+            } else {
+                console.log("No File Selected")
+            }
+            setLoadingState(false)
+        }
+    }
+
+
+
 
     return (
         <Card className="w-full max-w-3xl">
@@ -64,24 +107,18 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                     <CommandList>
                                         <CommandEmpty>No results found.</CommandEmpty>
                                         <CommandGroup heading="Files">
-                                            <CommandItem className="flex gap-2">
-                                                <Checkbox id="doc1" />
-                                                <Label htmlFor="doc1" className="font-normal text-sm">
-                                                    Document 1
-                                                </Label>
-                                            </CommandItem>
-                                            <CommandItem className="flex gap-2">
-                                                <Checkbox id="doc2" />
-                                                <Label htmlFor="doc2" className="font-normal text-sm">
-                                                    Document 2
-                                                </Label>
-                                            </CommandItem>
-                                            <CommandItem className="flex gap-2">
-                                                <Checkbox id="doc3" />
-                                                <Label htmlFor="doc3" className="font-normal text-sm">
-                                                    Document 3
-                                                </Label>
-                                            </CommandItem>
+                                            {
+                                                documents.map((document) => {
+                                                    return (
+                                                        <CommandItem className="flex gap-2">
+                                                            <Checkbox id={document} />
+                                                            <Label htmlFor={document} className="font-normal text-sm">
+                                                                {document}
+                                                            </Label>
+                                                        </CommandItem>
+                                                    )
+                                                })
+                                            }
                                         </CommandGroup>
                                     </CommandList>
                                 </Command>
@@ -104,7 +141,15 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                         <DrawerHeader>
                                             <DrawerTitle>Upload New File</DrawerTitle>
                                             <DrawerDescription>Share your course content whether it is .pdf, .ppt or .docs and we'll generate flashcards for you.</DrawerDescription>
-                                            <Input className="max-w-sm" type="file" />
+                                            <div className="flex gap-2">
+                                                <Input className="max-w-sm" type="file" ref={inputFile} />
+                                                {
+                                                    loadingState ?
+                                                    <Button variant="default" className="bg-blue-400 hover:bg-blue-300 text-white"><LoadingIcon className="w-5 h-5 animate-spin"/></Button>
+                                                    :
+                                                    <Button variant="default" className="bg-blue-400 hover:bg-blue-300" onClick={handleUploadClick}>Upload</Button>
+                                                }
+                                            </div>
                                         </DrawerHeader>
                                         <DrawerFooter className="place-self-start">
                                             <DrawerClose className="justify-start">
