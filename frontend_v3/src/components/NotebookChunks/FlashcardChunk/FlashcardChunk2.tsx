@@ -5,6 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Carousel, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import {
+    Command,
+    CommandDialog,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    CommandSeparator,
+    CommandShortcut,
+} from "@/components/ui/command"
 
 // Type Definition Imports
 import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
@@ -51,6 +63,35 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                             <SelectItem value="file3.json">File 3</SelectItem>
                         </SelectContent>
                     </Select>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="flex items-center gap-2">
+                                <FileIcon className="h-5 w-5" />
+                                <span>Select Documents</span>
+                                <ChevronDownIcon className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <Command>
+                                <CommandInput placeholder="Type a command or search..." />
+                                <CommandList>
+                                    <CommandEmpty>No results found.</CommandEmpty>
+                                    <CommandGroup heading="Suggestions">
+                                        <CommandItem>Calendar</CommandItem>
+                                        <CommandItem>Search Emoji</CommandItem>
+                                        <CommandItem>Calculator</CommandItem>
+                                    </CommandGroup>
+                                    <CommandSeparator />
+                                    <CommandGroup heading="Settings">
+                                        <CommandItem>Profile</CommandItem>
+                                        <CommandItem>Billing</CommandItem>
+                                        <CommandItem>Settings</CommandItem>
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                            <Button>Select All</Button>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     <Button
                         // onClick={handleSearch}
                         className="ml-4"
@@ -58,7 +99,6 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                     >
                         <SearchIcon className="w-5 h-5" />
                     </Button>
-
                 </div>
                 <Carousel>
                     <CarouselContent>
@@ -74,6 +114,45 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                     <CarouselNext />
                 </Carousel>
             </CardContent>
-        </Card>
+        </Card >
+    )
+}
+
+function FileIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+        </svg>
+    )
+}
+
+function ChevronDownIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="m6 9 6 6 6-6" />
+        </svg>
     )
 }

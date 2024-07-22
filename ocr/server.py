@@ -349,7 +349,13 @@ async def getTimestamps(query: str):
                     "content": {subtitles[i][:80] + '...'}
                 }
                 timestamps += [timestamp]
-            return timestamps
+                
+            unique_timestamps = []
+            for timestamp in timestamps:
+                if timestamp not in unique_timestamps:
+                    unique_timestamps.append(timestamp)
+
+            return unique_timestamps
             
             
 
