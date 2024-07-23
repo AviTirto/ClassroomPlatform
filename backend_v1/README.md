@@ -93,4 +93,5 @@ git push --force
 6) Clean up the bfg program.
 ```
 rm -rf bfg-1.14.0.jar
+rm keys.txt
 ```
