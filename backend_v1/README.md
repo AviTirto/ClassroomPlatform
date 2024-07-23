@@ -72,7 +72,7 @@ cd ClassroomProject
 java -jar bfg-1.14.0.jar --replace-text keys.txt .
 ```
 
-3) Add the sensitive information you would like to remove from the repository to a file called ==keys.txt==. Every key, url, or password is seperated by a newline. Example contents of ==keys.txt==:
+3) Add the sensitive information you would like to remove from the repository to a file called <mark>keys.txt</mark>. Every key, url, or password is seperated by a newline. Example contents of <mark>keys.txt</mark>:
 ```
 api_key_1
 api_key_2
