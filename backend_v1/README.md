@@ -53,3 +53,44 @@ shellingham==1.5.4
 5) Push changes:
 - *Remember to pull before pushing to deal with conflicts locally, or your push will fail.*
 - *Remember to push it is git add -A, git commit -m "message", then git push*
+
+
+
+
+## Steps for Removing Sensitive API Key, Database, and Password Information from the Repository
+
+Ideally, sensitive information like API Keys are stored in a .env file which is not added to the repository(check .gitignore). Sensitive information is accessed using the python-dotenv library. However, these steps are for if you have already accidentally pushed sensitive information to the repository and need it removed from previous commits.
+
+1) Outside the repository download the bfg jarfile. **Be sure a version of java is installed.** You can do this using the wget command:
+```
+wget https://repo1.maven.org/maven2/com/madgag/bfg/1.14.0/bfg-1.14.0.jar
+```
+
+2) Enter the repository and run the jar file to remove all keys specified in keys.txt across all files in the repository for all past commits.
+```
+cd ClassroomProject
+java -jar bfg-1.14.0.jar --replace-text keys.txt .
+```
+
+3) Add the sensitive information you would like to remove from the repository to a file called ==keys.txt==. Every key, url, or password is seperated by a newline. Example contents of ==keys.txt==:
+```
+api_key_1
+api_key_2
+db_url_1
+password_1
+```
+
+4) Not sure what this does but you gotta do it:
+```
+git reflog expire --expire=now --all && git gc --prune=now --aggressive
+```
+
+5) Push changes to the repository. **Be sure that before you even start step 1, you have already pulled the latest version to avoid conflicts.**
+```
+git push --force
+```
+
+6) Clean up the bfg program.
+```
+rm -rf bfg-1.14.0.jar
+```
