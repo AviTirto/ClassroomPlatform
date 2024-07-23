@@ -10,13 +10,14 @@ from pytube import YouTube
 from moviepy.editor import *
 from youtube_transcript_api import YouTubeTranscriptApi
 import asyncio
-import aiohttp
-import time
+from dotenv import load_dotenv
+import os
 
-# youtube api key: ***REMOVED***
+load_dotenv()
 
-
-api_key = "***REMOVED***"
+api_key = os.getenv('GEMINI_API_KEY')
+cohere_api_key = os.getenv('COHERE_KEY')
+database_url = os.getenv('SINGLESTORE_DATABASE_URL')
 genai.configure(api_key = api_key)
 
 app = FastAPI()
@@ -26,7 +27,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:5173"
-    ],  # Adjust as per your React app's origin
+    ], 
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
@@ -67,14 +68,13 @@ async def upload_file(file: UploadFile):
     """
 
     response = model.generate_content(prompt + content)
-    # print(type(response.text))
     return convertJSONList(response.text)
 
 
 @app.post("/upload_doc")
 async def upload_file(file: UploadFile):
     # Create a connection to the database
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     
     with conn:
         with conn.cursor() as cur:
@@ -101,7 +101,7 @@ async def upload_file(file: UploadFile):
 
 @app.get("/files")
 async def get_files():
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     
     with conn:
         with conn.cursor() as cur:
@@ -113,7 +113,7 @@ async def get_files():
         
 @app.post('/genai')
 async def getQuestions(query):
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     with conn:
         with conn.cursor() as cur:
             embedding = genai.embed_content(model='models/embedding-001',
@@ -137,7 +137,7 @@ async def getQuestions(query):
                 docs += [row[0]]
 
             # Reranking
-            co = cohere.Client("***REMOVED***")
+            co = cohere.Client(cohere_api_key)
             response = co.rerank(
                 model="rerank-english-v3.0",
                 query=query,
@@ -179,7 +179,6 @@ async def getQuestions(query):
             """
 
             response = model.generate_content(prompt + content)
-            # print(type(response.text))
             return convertJSONList(response.text)
 
 class Subtitle:
@@ -217,7 +216,7 @@ async def parse_timestamps(link: str):
             chunked_subtitles.append(Subtitle(index // 16, start_second, content_chunk))
             content_chunk = ""
 
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     try:
         with conn.cursor() as cur:
             cur.execute(
@@ -269,7 +268,7 @@ async def parse_timestamps(link: str):
 
 @app.post('/clean_lecture')
 async def clearLecture(link: str):
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     with conn:
         with conn.cursor() as cur:
             query = f"""
@@ -288,7 +287,7 @@ async def clearLecture(link: str):
 
 @app.get('/query_lecture')
 async def getTimestamps(query: str):
-    conn = s2.connect('***REMOVED***')
+    conn = s2.connect(database_url)
     with conn:
         with conn.cursor() as cur:
             embedding = genai.embed_content(model='models/embedding-001',
@@ -356,17 +355,3 @@ async def getTimestamps(query: str):
                     unique_timestamps.append(timestamp)
 
             return unique_timestamps
-            
-            
-
-
-            
-                
-
-
-# Hugging Face Token: ***REMOVED***
-# Cohere API: ***REMOVED***
-            
-# "https://api-inference.huggingface.co/models/re2g/re2g-reranker-trex"
-
-# google youtube api key: ***REMOVED***
