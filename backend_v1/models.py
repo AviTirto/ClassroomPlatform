@@ -48,7 +48,7 @@ class VideoChunks(Base):
     order = Column(Integer)
     video_url = Column(Text)
     subtitle_content = Column(Text)
-    embedding = Column(BLOB(float))
+    embedding = Column(BLOB)
     
     notebook = relationship("Notebook", back_populates="video_chunks")
 
@@ -61,7 +61,7 @@ class TextChunks(Base):
     title  = Column(String(255), index = True)
     order = Column(Integer)
     text_content = Column(Text)
-    embedding = Column(BLOB(float))
+    embedding = Column(BLOB)
     
     notebook = relationship("Notebook", back_populates="text_chunks")
     
@@ -76,7 +76,7 @@ class DocumentChunks(Base):
     order = Column(Integer)
     filepath  = Column(String(255))
     content_string = Column(Text)
-    embedding = Column(BLOB(float))
+    embedding = Column(BLOB)
     
     notebook = relationship("Notebook", back_populates="document_chunks")
 
@@ -91,6 +91,6 @@ class FlashcardChunks(Base):
     options = Column(JSON)
     explanation = Column(Text)
     answer = Column(Integer)
-    embedding = Column(BLOB(float))
+    embedding = Column(BLOB)
     
     notebook = relationship("Notebook", back_populates="flashcard_chunks")
