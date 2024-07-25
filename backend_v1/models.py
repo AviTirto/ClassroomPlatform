@@ -94,3 +94,12 @@ class FlashcardChunks(Base):
     embedding = Column(BLOB)
     
     notebook = relationship("Notebook", back_populates="flashcard_chunks")
+
+#### TO DO: Split FlashcardChunks into two tables
+# 1) FlashcardsChunk -> title, notebook_id, id, order
+# 2) Flashcard -> flashcards_id, order, question, options, explanation, answer, embedding
+#       - The order in the FlashcardChunk should just be the order of the card within the deck of cards
+#       - Consider replacing this with an id instead, we just need a way to uniquely identify the card
+
+#### TO DO: Implement Pgvector-python to model for embeddings, replace blob with vector type.
+# I sent u the library through whatsapp

@@ -80,3 +80,6 @@ class TeacherSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+#### TO DO: Split Notebook Schema into Notebook Base and Notebook Populated??? smth like that
+# The base should just be id: int, course_id: int, title: str --> default title should be Untitled
