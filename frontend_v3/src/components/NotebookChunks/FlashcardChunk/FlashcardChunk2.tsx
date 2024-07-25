@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/command"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Label } from "@/components/ui/label"
 
 // Type Definition Imports
 import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
@@ -23,7 +24,7 @@ import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
 import { EditFlashcardChunk } from "./EditFlashcardChunk"
 import { ChunkOptions } from "../ChunkOptions"
 import { Flashcard } from "./Flashcard"
-import { Label } from "@/components/ui/label"
+import { SearchBar } from "@/components/composables/SearchBar"
 
 // API Imports
 import { FlashcardAPI } from "@/apis/FlashcardAPI"
@@ -31,9 +32,12 @@ import { FlashcardAPI } from "@/apis/FlashcardAPI"
 // React Functionality Imports
 import { useEffect, useState, useRef } from 'react'
 
+
 export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcards }) => {
-    const [documents, setDocuments] = useState([])
+    const [documents, setDocuments] = useState([]);
     const inputFile = useRef<HTMLInputElement>(null);
+    const [inputQuery, setInputQuery] = useState("");
+
     const [loadingState, setLoadingState] = useState(false)
     useEffect(() => {
         const fetchFiles = async () => {
@@ -85,12 +89,12 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                 </EditFlashcardChunk>
             </CardHeader>
             <CardContent className="px-20">
-                <div className="flex items-center mb-8">
-                    <Input
-                        placeholder="Search flashcards..."
-                        // value={searchTerm}
-                        // onChange={(e) => setSearchTerm(e.target.value)}
-                        className="flex-1 mr-4"
+                <div className="flex items-center mb-8 space-x-2">
+                    <SearchBar
+                        inputQuery={inputQuery}
+                        setInputQuery={setInputQuery}
+                        placeholder="Search lecture..."
+                        style=""
                     />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

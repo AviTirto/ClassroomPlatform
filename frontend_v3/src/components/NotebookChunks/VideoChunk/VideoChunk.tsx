@@ -7,7 +7,6 @@
 // Styling Imports
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { SearchIcon, ClockIcon, LoadingIcon } from "@/assets/Icons"
 
 // React Functionality Imports
@@ -25,6 +24,7 @@ import { ChunkOptions } from "../ChunkOptions"
 
 // Component Imports
 import { EditVideoChunk } from "./EditVideoChunk"
+import { SearchBar } from "@/components/composables/SearchBar"
 
 // API Imports
 import { LectureAPI } from "@/apis/LectureAPI"
@@ -174,12 +174,11 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, title, descr
                     </div>
                     <div className="grid gap-4">
                         <div className="flex items-center gap-2">
-                            <Input 
-                                type="search"
+                            <SearchBar
+                                inputQuery = {inputQuery}
+                                setInputQuery={setInputQuery}
                                 placeholder="Search lecture..."
-                                className="flex-1 focus-visible:ring-offset-0 focus-visible:ring-0 hover:bg-gray-50 duration-500"
-                                value={inputQuery}
-                                onChange={e => setInputQuery(e.target.value)}
+                                style=""
                             />
                             {loadingState ?
                                 <Button variant="ghost">

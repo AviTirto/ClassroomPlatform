@@ -285,6 +285,7 @@ async def clearLecture(link: str):
 
 @app.get('/query_lecture')
 async def getTimestamps(query: str):
+    print(query)
     conn = s2.connect(database_url)
     with conn:
         with conn.cursor() as cur:
