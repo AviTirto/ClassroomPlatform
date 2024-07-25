@@ -34,7 +34,7 @@ import { useEffect, useState, useRef } from 'react'
 export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcards }) => {
     const [documents, setDocuments] = useState([])
     const inputFile = useRef<HTMLInputElement>(null);
-    const [loadingState, setLoadingState]= useState(false)
+    const [loadingState, setLoadingState] = useState(false)
     useEffect(() => {
         const fetchFiles = async () => {
             try {
@@ -47,7 +47,7 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
 
         fetchFiles();
     }
-        , []);
+        , [loadingState]);
 
     const handleUploadClick = async () => {
         if (inputFile.current && inputFile.current.files) {
@@ -104,8 +104,13 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                             <div className="border-b">
                                 <Command>
                                     <CommandInput placeholder="Search for document..." />
+                                    {
+                                        documents.length > 0 ?
+                                            <CommandEmpty>No results found.</CommandEmpty>
+                                            :
+                                            <></>
+                                    }
                                     <CommandList>
-                                        <CommandEmpty>No results found.</CommandEmpty>
                                         <CommandGroup heading="Files">
                                             {
                                                 documents.map((document) => {
@@ -124,12 +129,17 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                 </Command>
                             </div>
                             <div className="m-1">
-                                <div className="flex items-center gap-2 p-2 hover:bg-accent rounded-sm">
-                                    <Checkbox id="select-all" />
-                                    <Label htmlFor="select-all" className="font-medium">
-                                        Select All
-                                    </Label>
-                                </div>
+                                {
+                                    documents.length > 0 ?
+                                        <div className="flex items-center gap-2 p-2 hover:bg-accent rounded-sm">
+                                            <Checkbox id="select-all" />
+                                            <Label htmlFor="select-all" className="font-medium">
+                                                Select All
+                                            </Label>
+                                        </div>
+                                        :
+                                        <></>
+                                }
                                 <Drawer>
                                     <DrawerTrigger className="w-full">
                                         <Button variant='ghost' className="w-full h-fit justify-start flex gap-2 px-2 py-1 rounded-sm">
@@ -145,9 +155,9 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                                 <Input className="max-w-sm" type="file" ref={inputFile} />
                                                 {
                                                     loadingState ?
-                                                    <Button variant="default" className="bg-blue-400 hover:bg-blue-300 text-white"><LoadingIcon className="w-5 h-5 animate-spin"/></Button>
-                                                    :
-                                                    <Button variant="default" className="bg-blue-400 hover:bg-blue-300" onClick={handleUploadClick}>Upload</Button>
+                                                        <Button variant="default" className="bg-blue-400 hover:bg-blue-300 text-white"><LoadingIcon className="w-5 h-5 animate-spin" /></Button>
+                                                        :
+                                                        <Button variant="default" className="bg-blue-400 hover:bg-blue-300" onClick={handleUploadClick}>Upload</Button>
                                                 }
                                             </div>
                                         </DrawerHeader>

@@ -90,11 +90,9 @@ async def upload_file(file: UploadFile):
                 embedding = genai.embed_content(model='models/embedding-001',
                                                 content=text,
                                                 task_type="retrieval_document",
-                                                title=file.filename)
-                query = f"""
-                    INSERT INTO doc_embedding (doc_id, content_str, vector)
-                    VALUES ("{file.filename}","{text}", JSON_ARRAY_PACK("{embedding['embedding']}"))"""
-                cur.execute(query)
+                                                title=file.filename)['embedding']
+                query = "INSERT INTO doc_embedding (doc_id, content_str, vector) VALUES (%s,%s, JSON_ARRAY_PACK('%s'))"
+                cur.execute(query, (file.filename, text, embedding))
 
             # After an entire document is added, then it is committed
             conn.commit()
