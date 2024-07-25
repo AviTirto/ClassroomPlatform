@@ -4,3 +4,8 @@ export interface SearchBarProps {
     placeholder: string;
     style: string;
 }
+
+export interface SearchButtonProps {
+    handleSearch: () => (void);
+    style: string;
+}

@@ -7,7 +7,7 @@
 // Styling Imports
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { SearchIcon, ClockIcon, LoadingIcon } from "@/assets/Icons"
+import { ClockIcon, LoadingIcon } from "@/assets/Icons"
 
 // React Functionality Imports
 import { useState, useRef } from 'react'
@@ -24,7 +24,7 @@ import { ChunkOptions } from "../ChunkOptions"
 
 // Component Imports
 import { EditVideoChunk } from "./EditVideoChunk"
-import { SearchBar } from "@/components/composables/SearchBar"
+import { SearchBar, SearchButton } from "@/components/composables/SearchBar"
 
 // API Imports
 import { LectureAPI } from "@/apis/LectureAPI"
@@ -185,12 +185,7 @@ export const VideoChunk: React.FC<VideoChunkProps> = ({ order, url, title, descr
                                     <LoadingIcon className="w-5 h-5 animate-spin" />
                                 </Button>
                                 :
-                                <Button
-                                    variant="ghost"
-                                    onClick={handleSearch}
-                                >
-                                    <SearchIcon className="w-5 h-5" />
-                                </Button>
+                                <SearchButton handleSearch={handleSearch} style=""/>
                             }
                         </div>
                         <div className="grid gap-2">

@@ -1,5 +1,7 @@
-import { SearchBarProps } from "@/constants/ComposableTypes";
-import { Input } from "../ui/input";
+import { SearchBarProps, SearchButtonProps } from "@/constants/ComposableTypes";
+import { Input } from "@/components/ui/input";
+import { SearchIcon } from "@/assets/Icons";
+import { Button } from "@/components/ui/button";
 
 export const SearchBar: React.FC<SearchBarProps> = ({ inputQuery, setInputQuery, placeholder, style }) => {
   return (
@@ -10,5 +12,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({ inputQuery, setInputQuery,
       value={inputQuery}
       onChange={e => setInputQuery(e.target.value)}
     />
+  )
+}
+
+export const SearchButton: React.FC<SearchButtonProps> = ({ handleSearch, style }) => {
+  return (
+    <Button
+      variant="ghost"
+      onClick={handleSearch}
+    >
+      <SearchIcon className={`w-5 h-5 ${style}`} />
+    </Button>
   )
 }

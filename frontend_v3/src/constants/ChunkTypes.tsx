@@ -75,6 +75,7 @@ export interface FlashcardProps {
 export interface FlashcardChunkProps{
     title: string;
     flashcards: FlashcardJSON[];
+    order: number;
 }
 
 export interface EditFlashcardChunkProps{

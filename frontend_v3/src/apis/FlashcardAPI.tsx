@@ -26,7 +26,7 @@ export const FlashcardAPI = {
         const response = await axios.get(`http://127.0.0.1:8000/files`)
         return response.data;
     },
-    genai: async function (input_query: string) {
+    make_flashcards: async function (input_query: string) {
         const response = await axios.post(`http://127.0.0.1:8000/genai?query=${input_query}`)
         return response.data;
     }

@@ -114,6 +114,7 @@ export function NBChunksProvider({ children }: NBChunksProviderProps) {
                     key={flashcardChunk.order}
                     title={flashcardChunk.title}
                     flashcards={flashcardChunk.flashcards}
+                    order={flashcardChunk.order}
                 />
             )
         } else {
@@ -122,9 +123,11 @@ export function NBChunksProvider({ children }: NBChunksProviderProps) {
     }
 
     const updateChunk = (chunk: VideoChunkJSON | TextChunkJSON | FlashcardChunkJSON) => {
-        const updatedChunks = [...chunks]
-        updatedChunks[chunk.order] = chunk
-        setChunks(updatedChunks)
+        setChunks((prevChunks) =>
+            prevChunks.map((prevChunk, index) =>
+                index === chunk.order ? chunk : prevChunk
+            )
+        );
     }
 
     const deleteChunk = (order: number) => {

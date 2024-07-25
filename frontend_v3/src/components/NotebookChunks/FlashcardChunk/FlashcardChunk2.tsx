@@ -18,13 +18,16 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { Label } from "@/components/ui/label"
 
 // Type Definition Imports
-import { EDIT_TYPES, FlashcardChunkProps } from "@/constants/ChunkTypes"
+import { CHUNK_TYPES, EDIT_TYPES, FlashcardChunkJSON, FlashcardChunkProps } from "@/constants/ChunkTypes"
+
+// Context Import
+import { useNBUpdateChunks } from "@/services/NBChunksProvider"
 
 // Components Import
 import { EditFlashcardChunk } from "./EditFlashcardChunk"
 import { ChunkOptions } from "../ChunkOptions"
 import { Flashcard } from "./Flashcard"
-import { SearchBar } from "@/components/composables/SearchBar"
+import { SearchBar, SearchButton } from "@/components/composables/SearchBar"
 
 // API Imports
 import { FlashcardAPI } from "@/apis/FlashcardAPI"
@@ -33,12 +36,15 @@ import { FlashcardAPI } from "@/apis/FlashcardAPI"
 import { useEffect, useState, useRef } from 'react'
 
 
-export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcards }) => {
+export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ order, title, flashcards }) => {
+    const updateChunk = useNBUpdateChunks()
+
     const [documents, setDocuments] = useState([]);
     const inputFile = useRef<HTMLInputElement>(null);
     const [inputQuery, setInputQuery] = useState("");
-
+    const [fileLoadingState, setFileLoadingState] = useState(false)
     const [loadingState, setLoadingState] = useState(false)
+
     useEffect(() => {
         const fetchFiles = async () => {
             try {
@@ -51,11 +57,12 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
 
         fetchFiles();
     }
-        , [loadingState]);
+        , [fileLoadingState]);
+
 
     const handleUploadClick = async () => {
         if (inputFile.current && inputFile.current.files) {
-            setLoadingState(true)
+            setFileLoadingState(true)
             const file = inputFile.current.files[0]
             if (file) {
                 try {
@@ -67,12 +74,26 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
             } else {
                 console.log("No File Selected")
             }
-            setLoadingState(false)
+            setFileLoadingState(false)
         }
     }
 
-
-
+    const handleSearchClick = async () => {
+        setLoadingState(true);
+        if (inputQuery) {
+            const newFlashcards = await FlashcardAPI.make_flashcards(inputQuery);
+            // console.log("New flashcards:", newFlashcards); // Debugging line
+            const updatedChunk: FlashcardChunkJSON = {
+                "type": CHUNK_TYPES.FLASHCARD,
+                "order": order,
+                "title": title,
+                "flashcards": newFlashcards
+            };
+            // console.log("Updated chunk:", updatedChunk); // Debugging line
+            await updateChunk(updatedChunk);
+        }
+        setLoadingState(false);
+    }
 
     return (
         <Card className="w-full max-w-3xl">
@@ -158,7 +179,7 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                                             <div className="flex gap-2">
                                                 <Input className="max-w-sm" type="file" ref={inputFile} />
                                                 {
-                                                    loadingState ?
+                                                    fileLoadingState ?
                                                         <Button variant="default" className="bg-blue-400 hover:bg-blue-300 text-white"><LoadingIcon className="w-5 h-5 animate-spin" /></Button>
                                                         :
                                                         <Button variant="default" className="bg-blue-400 hover:bg-blue-300" onClick={handleUploadClick}>Upload</Button>
@@ -175,13 +196,13 @@ export const FlashcardChunk2: React.FC<FlashcardChunkProps> = ({ title, flashcar
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button
-                        // onClick={handleSearch}
-                        className="ml-4"
-                        variant="ghost"
-                    >
-                        <SearchIcon className="w-5 h-5" />
-                    </Button>
+                    {loadingState ?
+                        <Button variant="ghost">
+                            <LoadingIcon className="w-5 h-5 animate-spin" />
+                        </Button>
+                        :
+                        <SearchButton handleSearch={handleSearchClick} style="" />
+                    }
                 </div>
                 <Carousel>
                     <CarouselContent>
