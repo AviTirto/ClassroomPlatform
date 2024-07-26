@@ -1,6 +1,5 @@
 import { useContext, useState, createContext } from 'react'
 import { CHUNK_TYPES, VideoChunkJSON, TextChunkJSON, FlashcardChunkJSON } from '@/constants/ChunkTypes';
-import { TextChunk } from '@/components/NotebookChunks/TextChunk';
 import { VideoChunk } from '@/components/NotebookChunks/VideoChunk/VideoChunk';
 import { FlashcardChunk2 } from '@/components/NotebookChunks/FlashcardChunk/FlashcardChunk2'
 import { NBChunksContextType, NBRenderChunksContextType, NBUpdateChunksContextType, NBDeleteChunksContextType } from '@/constants/NBContextTypes'
@@ -30,13 +29,8 @@ const NBDeleteChunksContext = createContext<NBDeleteChunksContextType | undefine
 export function NBChunksProvider({ children }: NBChunksProviderProps) {
     const [chunks, setChunks] = useState([
         {
-            type: CHUNK_TYPES.TEXT,
-            order: 0,
-            content: ""
-        },
-        {
             type: CHUNK_TYPES.VIDEO,
-            order: 1,
+            order: 0,
             url: "",
             title: "Example Title",
             description: "This is an example description"
@@ -44,7 +38,7 @@ export function NBChunksProvider({ children }: NBChunksProviderProps) {
         {
             type: CHUNK_TYPES.FLASHCARD,
             title: "Flashcards Title",
-            order: 2,
+            order: 1,
             flashcards: [
                 {
                     question: "Question 1",
