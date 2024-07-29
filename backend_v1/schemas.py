@@ -49,10 +49,28 @@ class FlashcardChunksSchema(BaseModel):
     class Config:
         orm_mode = True
 
-class NotebookSchema(BaseModel):
+# class NotebookSchema(BaseModel):
+#     id: int
+#     course_id: int
+#     title: str
+#     description: str
+#     video_chunks: List[VideoChunksSchema] = []
+#     text_chunks: List[TextChunksSchema] = []
+#     document_chunks: List[DocumentChunksSchema] = []
+#     flashcard_chunks: List[FlashcardChunksSchema] = []
+
+#     class Config:
+#         orm_mode = True
+
+class NotebookBaseSchema(BaseModel):
     id: int
     course_id: int
     title: str
+
+    class Config:
+        orm_mode = True
+
+class NotebookPopulatedSchema(NotebookBaseSchema):
     description: str
     video_chunks: List[VideoChunksSchema] = []
     text_chunks: List[TextChunksSchema] = []
@@ -62,11 +80,12 @@ class NotebookSchema(BaseModel):
     class Config:
         orm_mode = True
 
+
 class CourseSchema(BaseModel):
     id: int
     title: str
     teacher_id: int
-    notebooks: List[NotebookSchema] = []
+    notebooks: List[NotebookPopulatedSchema] = [] # Should this be NotebookBaseSchema Instead??s
 
     class Config:
         orm_mode = True
