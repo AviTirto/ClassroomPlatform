@@ -1,8 +1,7 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, JSON, Text, ARRAY, BLOB
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, JSON, Text
 from sqlalchemy.orm import relationship
-
+from pgvector.sqlalchemy import Vector
 from .database import Base
-
 
 class Teacher(Base):
     __tablename__ = "teacher"
@@ -48,7 +47,7 @@ class VideoChunks(Base):
     order = Column(Integer)
     video_url = Column(Text)
     subtitle_content = Column(Text)
-    embedding = Column(BLOB)
+    embedding = Column(Vector(350))
     
     notebook = relationship("Notebook", back_populates="video_chunks")
 
@@ -61,7 +60,7 @@ class TextChunks(Base):
     title  = Column(String(255), index = True)
     order = Column(Integer)
     text_content = Column(Text)
-    embedding = Column(BLOB)
+    embedding = Column(Vector(350))
     
     notebook = relationship("Notebook", back_populates="text_chunks")
     
@@ -76,7 +75,7 @@ class DocumentChunks(Base):
     order = Column(Integer)
     filepath  = Column(String(255))
     content_string = Column(Text)
-    embedding = Column(BLOB)
+    embedding = Column(Vector(350))
     
     notebook = relationship("Notebook", back_populates="document_chunks")
 
@@ -91,7 +90,7 @@ class FlashcardChunks(Base):
     options = Column(JSON)
     explanation = Column(Text)
     answer = Column(Integer)
-    embedding = Column(BLOB)
+    embedding = Column(Vector(350))
     
     notebook = relationship("Notebook", back_populates="flashcard_chunks")
 
