@@ -36,7 +36,7 @@ class Notebook(Base):
     video_chunks = relationship("VideoChunks", back_populates="notebook")
     text_chunks = relationship("TextChunks", back_populates="notebook")
     document_chunks = relationship("DocumentChunks", back_populates="notebook")
-    flashcard_chunks = relationship("FlashcardChunks", back_populates="notebook")
+    flashcards_chunk = relationship("FlashcardsChunk", back_populates="notebook")
 
 class VideoChunks(Base):
     __tablename__ = "video_chunks"
@@ -79,26 +79,25 @@ class DocumentChunks(Base):
     
     notebook = relationship("Notebook", back_populates="document_chunks")
 
+class FlashcardsChunk(Base):
+    __tablename__ = "flashcards_chunk"
 
-class FlashcardChunks(Base):
-    __tablename__ = "flashcard_chunks"
-
-    id  = Column(Integer)
-    notebook_id  = Column(Integer, ForeignKey("notebook.id"))
-    question  = Column(String(255))
+    id = Column(Integer)
+    notebook_id = Column(Integer, ForeignKey("notebook.id"))
+    title  = Column(String(255))
     order = Column(Integer)
+    
+    notebook = relationship("Notebook", back_populates="flashcards_chunk")
+    flashcards = relationship("Flashcard", back_populates = "flashcards_chunk")
+
+class Flashcard(Base):
+    __tablename__ = "flashcard"
+    flashcards_id = Column(Integer, ForeignKey("flashcards_chunk.id"))
+    order = Column(Integer)
+    question  = Column(String(255))
     options = Column(JSON)
     explanation = Column(Text)
     answer = Column(Integer)
     embedding = Column(Vector(350))
-    
-    notebook = relationship("Notebook", back_populates="flashcard_chunks")
 
-#### TO DO: Split FlashcardChunks into two tables
-# 1) FlashcardsChunk -> title, notebook_id, id, order
-# 2) Flashcard -> flashcards_id, order, question, options, explanation, answer, embedding
-#       - The order in the FlashcardChunk should just be the order of the card within the deck of cards
-#       - Consider replacing this with an id instead, we just need a way to uniquely identify the card
-
-#### TO DO: Implement Pgvector-python to model for embeddings, replace blob with vector type.
-# I sent u the library through whatsapp
+    flashcards_chunk = relationship("FlashcardsChunk", back_populates = "flashcards")
