@@ -168,7 +168,7 @@ async def getQuestions(query):
                 "id": int,
                 "question": str,
                 "options": [str],
-                "answer": this should be either (A, B, C, D, etc),
+                "answer": int (the index of the option that is the answer),
                 "explanation": str
             }
 
