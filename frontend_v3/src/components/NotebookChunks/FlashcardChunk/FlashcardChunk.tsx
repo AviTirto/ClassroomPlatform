@@ -3,7 +3,6 @@
  * @see https://v0.dev/t/FCSLbDPbU3d
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
-"use client"
 
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
