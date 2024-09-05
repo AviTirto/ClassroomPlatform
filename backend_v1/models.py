@@ -79,25 +79,29 @@ class DocumentChunks(Base):
     
     notebook = relationship("Notebook", back_populates="document_chunks")
 
-class FlashcardsChunk(Base):
+class FlashcardsContent(Base):
+    title  = Column(String(255))
+    flashcards = relationship("Flashcard", back_populates = "flashcards_chunk")
+
+class FlashcardsChunk(FlashcardsContent):
     __tablename__ = "flashcards_chunk"
 
     id = Column(Integer)
     notebook_id = Column(Integer, ForeignKey("notebook.id"))
-    title  = Column(String(255))
     order = Column(Integer)
     
     notebook = relationship("Notebook", back_populates="flashcards_chunk")
-    flashcards = relationship("Flashcard", back_populates = "flashcards_chunk")
 
-class Flashcard(Base):
-    __tablename__ = "flashcard"
-    flashcards_id = Column(Integer, ForeignKey("flashcards_chunk.id"))
-    order = Column(Integer)
+class FlashcardContent(Base):
     question  = Column(String(255))
     options = Column(JSON)
     explanation = Column(Text)
     answer = Column(Integer)
+
+class Flashcard(FlashcardContent):
+    __tablename__ = "flashcard"
+    flashcards_id = Column(Integer, ForeignKey("flashcards_chunk.id"))
+    order = Column(Integer)
     embedding = Column(Vector(350))
 
-    flashcards_chunk = relationship("FlashcardsChunk", back_populates = "flashcards")
+    flashcards_chunk = relationship("FlashcardsContent", back_populates = "flashcards")
