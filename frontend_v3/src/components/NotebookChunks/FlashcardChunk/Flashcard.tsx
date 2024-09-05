@@ -46,9 +46,9 @@ export const Flashcard: React.FC<FlashcardProps> = ({ flashcard }) => {
                                 variant="outline"
                                 className={`w-full px-3 h-fit ${isAnswered ?
                                         flashcard.answer === optIndex ?
-                                            'bg-green-300 duration-300 hover:bg-green-200'
+                                            'bg-green-300 duration-300 hover:bg-green-400'
                                             :
-                                            'bg-red-300'
+                                            'bg-red-300 hover:bg-red-400'
                                         :
                                         ''
                                     }`}
@@ -59,6 +59,7 @@ export const Flashcard: React.FC<FlashcardProps> = ({ flashcard }) => {
                                     disabled={true}
                                     value={option}
                                     rows={2}
+                                    onClick={() => { checkAnswer(Number(flashcard.answer)) }}
                                 />
                             </Button>
                         )
